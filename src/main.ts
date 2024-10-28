@@ -3,7 +3,7 @@ import { AppModule } from "./app.module";
 import { SwaggerModule } from "@nestjs/swagger";
 import { swaggerConfig } from "./common/constants/swagger.config";
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   const port = process.env.PORT;
 
@@ -12,4 +12,5 @@ async function bootstrap() {
 
   await app.listen(port, () => console.log(`Server is listening on port ${port}`));
 }
+
 bootstrap();
