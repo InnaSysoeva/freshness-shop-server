@@ -9,14 +9,7 @@
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./src", 
-    "paths": {
-      "@app/*": ["app/*"],
-      "@models/*": ["models/*"],
-      "@constants/*": ["common/constants/*"],
-      "@enums/*": ["common/enums/*"],
-      "@database/*": ["common/database/*"],
-    },
+    "baseUrl": ".", 
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -24,6 +17,5 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-
   }
 }
