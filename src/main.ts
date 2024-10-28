@@ -9,7 +9,7 @@ async function bootstrap(): Promise<void> {
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig)
   SwaggerModule.setup('/api/docs', app, swaggerDocument)
-
+  
   await app.listen(port, () => console.log(`Server is listening on port ${port}`));
 }
 
