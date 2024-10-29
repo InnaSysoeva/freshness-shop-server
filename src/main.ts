@@ -8,13 +8,16 @@ async function bootstrap(): Promise<void> {
   const port = process.env.PORT;
 
   app.enableCors({
-    origin: process.env.BASE_URL
-  })
+    origin: process.env.BASE_URL,
+  });
+  app.setGlobalPrefix("api/");
 
-  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig)
-  SwaggerModule.setup('/api/docs', app, swaggerDocument)
-  
-  await app.listen(port, () => console.log(`Server is listening on port ${port}`));
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup("/api/docs", app, swaggerDocument);
+
+  await app.listen(port, () =>
+    console.log(`Server is listening on port ${port}`),
+  );
 }
 
 bootstrap();
