@@ -3,6 +3,7 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { UsersService } from "./users.service";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { userApiDescription } from "./user-api.description";
+import { UserInterface } from "src/common/interfaces/user.interface";
 
 @Controller("users")
 export class UsersController {
@@ -11,7 +12,7 @@ export class UsersController {
   @ApiOperation(userApiDescription.createUser.apiOperation)
   @ApiResponse(userApiDescription.createUser.apiResponse)
   @Post()
-  create(@Body() userDto: CreateUserDto) {
+  async create(@Body() userDto: CreateUserDto): Promise<UserInterface> {
     return this.usersService.createUser(userDto);
   }
 }
