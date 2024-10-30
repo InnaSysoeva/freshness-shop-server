@@ -13,4 +13,18 @@ export const authDescription = {
       },
     },
   },
+  loginUser: {
+    apiOperation: {
+      summary: "Login user",
+      description:
+        "This endpoint allows an existing user to log in to the system and receive an access token.",
+    },
+    apiResponse: {
+      status: 200,
+      description: "User logged in successfully.",
+      example: {
+        accessToken: "jwt-token",
+      },
+    },
+  },
 };

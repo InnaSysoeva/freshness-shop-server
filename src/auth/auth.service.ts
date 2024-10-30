@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "../models/users/dto/create-user.dto";
 import { UsersService } from "../models/users/users.service";
@@ -7,6 +12,7 @@ import { hashRounds } from "../common/constants/hash.rounds.const";
 import { User } from "../models/users/user.schema";
 import errorMessages from "../common/constants/error.messages";
 import { isPasswordValid } from "../utils/password.validator";
+import { LoginUserDto } from "../models/users/dto/login-user.dto";
 
 @Injectable()
 export class AuthService {
@@ -55,5 +61,27 @@ export class AuthService {
     }
 
     return accessToken;
+  }
+
+  async loginUser(loginUserDto: LoginUserDto): Promise<{ token: string }> {
+    const user = await this.usersService.getUserByEmail(loginUserDto.email);
+
+    if (!user) {
+      throw new HttpException(
+        errorMessages.notFound("User with such email"),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      loginUserDto.password,
+      user.password,
+    );
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException(errorMessages.passwordValidation());
+    }
+
+    return { token: user.accessToken };
   }
 }
