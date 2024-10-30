@@ -20,8 +20,4 @@ export class UsersService {
 
     return user;
   }
-
-  async updateAccessToken(userId: string, accessToken: string): Promise<void> {
-    await this.userModel.findByIdAndUpdate(userId, { accessToken });
-  }
 }

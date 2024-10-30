@@ -58,11 +58,6 @@ export class AuthService {
       });
       const accessToken = await this.generateToken(newUser);
 
-      await this.usersService.updateAccessToken(
-        newUser._id.toString(),
-        accessToken.token,
-      );
-
       return accessToken;
     } catch (error) {
       throw new HttpException(
