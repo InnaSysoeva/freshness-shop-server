@@ -9,10 +9,10 @@ import { CreateUserDto } from "../models/users/dto/create-user.dto";
 import { UsersService } from "../models/users/users.service";
 import * as bcrypt from "bcryptjs";
 import { hashRounds } from "../common/constants/hash.rounds.const";
-import { User } from "../models/users/user.schema";
 import errorMessages from "../common/constants/error.messages";
 import { isPasswordValid } from "../utils/password.validator";
 import { LoginUserDto } from "../models/users/dto/login-user.dto";
+import { UserInterface } from "src/common/interfaces/user.interface";
 
 @Injectable()
 export class AuthService {
@@ -21,8 +21,13 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async generateToken(user: User): Promise<{ token: string }> {
-    const payload = { email: user.email };
+  async generateToken(user: UserInterface): Promise<{ token: string }> {
+    const payload = {
+      _id: user._id.toString(),
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
 
     return { token: this.jwtService.sign(payload) };
   }
@@ -45,22 +50,26 @@ export class AuthService {
     }
 
     const hashPassword = await bcrypt.hash(userDto.password, hashRounds);
-    const accessToken = await this.generateToken(userDto);
 
     try {
-      await this.usersService.createUser({
+      const newUser = await this.usersService.createUser({
         ...userDto,
         password: hashPassword,
-        accessToken: accessToken.token,
       });
+      const accessToken = await this.generateToken(newUser);
+
+      await this.usersService.updateAccessToken(
+        newUser._id.toString(),
+        accessToken.token,
+      );
+
+      return accessToken;
     } catch (error) {
       throw new HttpException(
         errorMessages.create("User"),
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
-    return accessToken;
   }
 
   async loginUser(loginUserDto: LoginUserDto): Promise<{ token: string }> {

@@ -1,7 +1,6 @@
-import { UserInterface } from "src/common/interfaces/user.interface";
 import { IsString, IsEmail, IsOptional, IsNotEmpty } from "class-validator";
 
-export class CreateUserDto implements UserInterface {
+export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   readonly firstName: string;

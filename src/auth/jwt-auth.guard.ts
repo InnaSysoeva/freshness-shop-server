@@ -7,6 +7,7 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { Observable } from "rxjs";
 import errorMessages from "../common/constants/error.messages";
+import { Request } from "express";
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -17,20 +18,25 @@ export class JwtAuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
 
+    const token = this.extractTokenFromHeader(request);
+
+    if (!token) {
+      throw new UnauthorizedException(errorMessages.unauthorized());
+    }
+
     try {
-      const authHeader = request.headers.authorization;
-      const token = authHeader.split("")[1];
-
-      if (!token) {
-        throw new UnauthorizedException(errorMessages.unauthorized());
-      }
-
       const decodedUser = this.jwtService.verify(token);
-      request.user = decodedUser;
-
-      return true;
+      request["user"] = decodedUser;
     } catch (error) {
       throw new UnauthorizedException(errorMessages.unauthorized());
     }
+
+    return true;
+  }
+
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization.split(" ") ?? [];
+
+    return type === "Bearer" ? token : undefined;
   }
 }

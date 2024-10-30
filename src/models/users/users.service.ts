@@ -3,12 +3,13 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { User } from "./user.schema";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { UserInterface } from "src/common/interfaces/user.interface";
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto): Promise<UserInterface> {
     const createdUser = new this.userModel(createUserDto);
 
     return createdUser.save();
@@ -18,5 +19,9 @@ export class UsersService {
     const user = await this.userModel.findOne({ email });
 
     return user;
+  }
+
+  async updateAccessToken(userId: string, accessToken: string): Promise<void> {
+    await this.userModel.findByIdAndUpdate(userId, { accessToken });
   }
 }

@@ -27,4 +27,24 @@ export const authDescription = {
       },
     },
   },
+  getCurrentUser: {
+    apiOperation: {
+      summary: "Get current user",
+      description:
+        "This endpoint retrieves the details of the currently logged-in user based on the provided JWT access token.",
+    },
+    apiResponse: {
+      status: 200,
+      description: "Successfully retrieved current user information.",
+      example: {
+        _id: "1",
+        firstName: "John",
+        lastName: "Doe",
+        email: "john.doe@example.com",
+        phoneNumber: "123-456-7890",
+        accessToken: "jwt-token",
+        refreshToken: "refresh-token",
+      },
+    },
+  },
 };
