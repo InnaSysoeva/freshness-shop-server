@@ -12,14 +12,14 @@ export class AuthController {
   @ApiOperation(authDescription.registerUser.apiOperation)
   @ApiResponse(authDescription.registerUser.apiResponse)
   @Post("/register")
-  registerUser(@Body() userDto: CreateUserDto) {
+  async registerUser(@Body() userDto: CreateUserDto): Promise<{token: string}> {
     return this.authService.registerUser(userDto);
   }
 
   @ApiOperation(authDescription.loginUser.apiOperation)
   @ApiResponse(authDescription.loginUser.apiResponse)
   @Post("/login")
-  loginUser(@Body() loginUserDto: LoginUserDto) {
+  async loginUser(@Body() loginUserDto: LoginUserDto): Promise<{token: string}> {
     return this.authService.loginUser(loginUserDto);
   }
 }
