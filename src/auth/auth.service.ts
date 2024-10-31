@@ -21,12 +21,17 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async generateToken(user: UserInterface): Promise<{ token: string }> {
+  async generateToken({
+    _id,
+    email,
+    firstName,
+    lastName,
+  }: UserInterface): Promise<{ token: string }> {
     const payload = {
-      _id: user._id.toString(),
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      _id: _id.toString(),
+      email,
+      firstName,
+      lastName,
     };
 
     return { token: this.jwtService.sign(payload) };

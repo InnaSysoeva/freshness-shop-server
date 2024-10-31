@@ -18,28 +18,28 @@ import { UserRequest } from "src/common/interfaces/user-request.interface";
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Post("/register")
   @ApiOperation(authDescription.registerUser.apiOperation)
   @ApiResponse(authDescription.registerUser.apiResponse)
-  @Post("/register")
   async registerUser(
     @Body() userDto: CreateUserDto,
   ): Promise<{ token: string }> {
     return this.authService.registerUser(userDto);
   }
 
+  @Post("/login")
   @ApiOperation(authDescription.loginUser.apiOperation)
   @ApiResponse(authDescription.loginUser.apiResponse)
-  @Post("/login")
   async loginUser(
     @Body() loginUserDto: LoginUserDto,
   ): Promise<{ token: string }> {
     return this.authService.loginUser(loginUserDto);
   }
 
+  @Get("/profile")
   @ApiOperation(authDescription.getCurrentUser.apiOperation)
   @ApiResponse(authDescription.getCurrentUser.apiResponse)
   @UseGuards(JwtAuthGuard)
-  @Get("/profile")
   getCurrentUser(@Request() request: UserRequest) {
     return request.user;
   }

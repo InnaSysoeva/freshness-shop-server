@@ -1,4 +1,5 @@
-import { IsString, IsEmail, IsOptional, IsNotEmpty } from "class-validator";
+import { IsString, IsEmail, IsOptional, IsNotEmpty, Matches } from "class-validator";
+import { passwordRegex } from "../../../common/constants/regex-expressions.const";
 
 export class CreateUserDto {
   @IsString()
@@ -13,6 +14,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   readonly email: string;
 
+  @IsNotEmpty()
+  @IsString()
+  @Matches(passwordRegex)
   readonly password: string;
 
   @IsOptional()
