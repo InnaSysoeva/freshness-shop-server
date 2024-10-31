@@ -47,4 +47,19 @@ export const authDescription = {
       },
     },
   },
+  refreshToken: {
+    apiOperation: {
+      summary: "Refresh tokens",
+      description:
+        "This endpoint generates new access and refresh tokens for the user.",
+    },
+    apiResponse: {
+      status: 200,
+      description: "Tokens refreshed successfully.",
+      example: {
+        accessToken: "new-access-jwt-token",
+        refreshToken: "new-refresh-jwt-token",
+      },
+    },
+  },
 };

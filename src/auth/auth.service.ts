@@ -8,11 +8,14 @@ import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "../models/users/dto/create-user.dto";
 import { UsersService } from "../models/users/users.service";
 import * as bcrypt from "bcryptjs";
-import { hashRounds } from "../common/constants/hash.rounds.const";
+import { hashRounds } from "../common/constants/hash-rounds.const";
 import errorMessages from "../common/constants/error.messages";
-import { isPasswordValid } from "../utils/password.validator";
 import { LoginUserDto } from "../models/users/dto/login-user.dto";
 import { UserInterface } from "src/common/interfaces/user.interface";
+import {
+  accessTokenExpirationTime,
+  refreshTokenExpirationTime,
+} from "../common/constants/token-expiration.const";
 
 @Injectable()
 export class AuthService {
@@ -21,18 +24,39 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async generateToken(user: UserInterface): Promise<{ token: string }> {
+  async generateAccesToken({
+    _id,
+    email,
+    firstName,
+    lastName,
+  }: UserInterface): Promise<string> {
     const payload = {
-      _id: user._id.toString(),
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      _id: _id.toString(),
+      email,
+      firstName,
+      lastName,
     };
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: accessTokenExpirationTime,
+    });
 
-    return { token: this.jwtService.sign(payload) };
+    return accessToken;
   }
 
-  async registerUser(userDto: CreateUserDto): Promise<{ token: string }> {
+  async generateRefreshToken(email: string): Promise<string> {
+    const payload = {
+      email,
+    };
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: refreshTokenExpirationTime,
+    });
+
+    return refreshToken;
+  }
+
+  async registerUser(
+    userDto: CreateUserDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.usersService.getUserByEmail(userDto.email);
 
     if (user) {
@@ -42,23 +66,20 @@ export class AuthService {
       );
     }
 
-    if (!isPasswordValid(userDto.password)) {
-      throw new HttpException(
-        errorMessages.passwordValidation(),
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     const hashPassword = await bcrypt.hash(userDto.password, hashRounds);
 
     try {
+      const refreshToken = await this.generateRefreshToken(userDto.email);
+
       const newUser = await this.usersService.createUser({
         ...userDto,
         password: hashPassword,
+        refreshToken: refreshToken,
       });
-      const accessToken = await this.generateToken(newUser);
 
-      return accessToken;
+      const accessToken = await this.generateAccesToken(newUser);
+
+      return { accessToken, refreshToken };
     } catch (error) {
       throw new HttpException(
         errorMessages.create("User"),
@@ -67,7 +88,9 @@ export class AuthService {
     }
   }
 
-  async loginUser(loginUserDto: LoginUserDto): Promise<{ token: string }> {
+  async loginUser(
+    loginUserDto: LoginUserDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.usersService.getUserByEmail(loginUserDto.email);
 
     if (!user) {
@@ -86,6 +109,37 @@ export class AuthService {
       throw new UnauthorizedException(errorMessages.passwordValidation());
     }
 
-    return { token: user.accessToken };
+    const refreshToken = user.refreshToken;
+    const accessToken = await this.generateAccesToken(user);
+
+    return { accessToken, refreshToken };
+  }
+
+  async refreshToken(
+    currentRefreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    try {
+      const decodedUser = this.jwtService.verify(currentRefreshToken);
+      const user = await this.usersService.getUserByEmail(decodedUser.email);
+
+      if (!user || user.refreshToken !== currentRefreshToken) {
+        throw new UnauthorizedException(errorMessages.refreshToken());
+      }
+
+      const refreshToken = await this.generateRefreshToken(user.email);
+      const accessToken = await this.generateAccesToken(user);
+
+      await this.usersService.updateUsersRefreshToken(
+        user._id.toString(),
+        refreshToken,
+      );
+
+      return {
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      };
+    } catch (error) {
+      throw new UnauthorizedException(errorMessages.refreshToken());
+    }
   }
 }

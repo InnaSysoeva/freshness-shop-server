@@ -13,34 +13,49 @@ import { authDescription } from "./auth-api.description";
 import { LoginUserDto } from "../models/users/dto/login-user.dto";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 import { UserRequest } from "src/common/interfaces/user-request.interface";
+import { UserInterface } from "src/common/interfaces/user.interface";
+import { RefreshTokenRequest } from "src/common/interfaces/refresh-token-request.interface";
 
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Post("/register")
   @ApiOperation(authDescription.registerUser.apiOperation)
   @ApiResponse(authDescription.registerUser.apiResponse)
-  @Post("/register")
   async registerUser(
     @Body() userDto: CreateUserDto,
-  ): Promise<{ token: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     return this.authService.registerUser(userDto);
   }
 
+  @Post("/login")
   @ApiOperation(authDescription.loginUser.apiOperation)
   @ApiResponse(authDescription.loginUser.apiResponse)
-  @Post("/login")
   async loginUser(
     @Body() loginUserDto: LoginUserDto,
-  ): Promise<{ token: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     return this.authService.loginUser(loginUserDto);
   }
 
+  @Get("/profile")
+  @UseGuards(JwtAuthGuard)
   @ApiOperation(authDescription.getCurrentUser.apiOperation)
   @ApiResponse(authDescription.getCurrentUser.apiResponse)
-  @UseGuards(JwtAuthGuard)
-  @Get("/profile")
-  getCurrentUser(@Request() request: UserRequest) {
+  getCurrentUser(@Request() request: UserRequest): UserInterface {
     return request.user;
+  }
+
+  @Post("/refresh-token")
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation(authDescription.refreshToken.apiOperation)
+  @ApiResponse(authDescription.refreshToken.apiResponse)
+  async refreshToken(
+    @Request() request: RefreshTokenRequest,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const authHeader = request.headers.authorization;
+    const refreshToken = authHeader && authHeader.split(" ")[1];
+    
+    return this.authService.refreshToken(refreshToken);
   }
 }

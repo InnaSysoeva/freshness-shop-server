@@ -6,6 +6,7 @@ const errorMessages = {
   emailValidation: () => `User with such email already exists`,
   passwordValidation: () => `Password is invalid`,
   unauthorized: () => `User is unauthorized`,
+  refreshToken: () => `Invalid refresh token`,
 };
 
 export default errorMessages;
