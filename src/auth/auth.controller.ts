@@ -39,8 +39,8 @@ export class AuthController {
   }
 
   @Post("/logout")
-  @ApiOperation(authDescription.loginUser.apiOperation)
-  @ApiResponse(authDescription.loginUser.apiResponse)
+  @ApiOperation(authDescription.logoutUser.apiOperation)
+  @ApiResponse(authDescription.logoutUser.apiResponse)
   @UseGuards(JwtAuthGuard)
   async logoutUser(
     @Request() request: AuhtRequest,
