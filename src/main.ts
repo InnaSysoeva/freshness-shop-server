@@ -7,6 +7,10 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   const port = process.env.PORT;
 
+  app.enableCors({
+    origin: process.env.BASE_URL
+  })
+
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig)
   SwaggerModule.setup('/api/docs', app, swaggerDocument)
   
