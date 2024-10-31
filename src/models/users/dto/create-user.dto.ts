@@ -1,5 +1,12 @@
 import { UserInterface } from "src/common/interfaces/user.interface";
-import { IsString, IsEmail, IsOptional, IsNotEmpty } from "class-validator";
+import {
+  IsString,
+  IsEmail,
+  IsOptional,
+  IsNotEmpty,
+  Matches,
+} from "class-validator";
+import { passwordRegex } from "../../../common/constants/regex-expressions.const";
 
 export class CreateUserDto implements UserInterface {
   @IsString()
@@ -14,6 +21,9 @@ export class CreateUserDto implements UserInterface {
   @IsNotEmpty()
   readonly email: string;
 
+  @IsNotEmpty()
+  @IsString()
+  @Matches(passwordRegex)
   readonly password: string;
 
   @IsOptional()

@@ -11,7 +11,6 @@ import * as bcrypt from "bcryptjs";
 import { hashRounds } from "../common/constants/hash.rounds.const";
 import { User } from "../models/users/user.schema";
 import errorMessages from "../common/constants/error.messages";
-import { isPasswordValid } from "../utils/password.validator";
 import { LoginUserDto } from "../models/users/dto/login-user.dto";
 
 @Injectable()
@@ -21,8 +20,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async generateToken(user: User): Promise<{ token: string }> {
-    const payload = { email: user.email };
+  async generateToken({ email }: User): Promise<{ token: string }> {
+    const payload = { email };
 
     return { token: this.jwtService.sign(payload) };
   }
@@ -33,13 +32,6 @@ export class AuthService {
     if (user) {
       throw new HttpException(
         errorMessages.emailValidation(),
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    if (!isPasswordValid(userDto.password)) {
-      throw new HttpException(
-        errorMessages.passwordValidation(),
         HttpStatus.BAD_REQUEST,
       );
     }

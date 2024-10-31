@@ -9,9 +9,9 @@ import { UserInterface } from "src/common/interfaces/user.interface";
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @Post()
   @ApiOperation(userApiDescription.createUser.apiOperation)
   @ApiResponse(userApiDescription.createUser.apiResponse)
-  @Post()
   async create(@Body() userDto: CreateUserDto): Promise<UserInterface> {
     return this.usersService.createUser(userDto);
   }

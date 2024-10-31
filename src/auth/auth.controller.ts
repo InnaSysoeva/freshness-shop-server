@@ -9,17 +9,21 @@ import { LoginUserDto } from "../models/users/dto/login-user.dto";
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Post("/register")
   @ApiOperation(authDescription.registerUser.apiOperation)
   @ApiResponse(authDescription.registerUser.apiResponse)
-  @Post("/register")
-  async registerUser(@Body() userDto: CreateUserDto): Promise<{token: string}> {
+  async registerUser(
+    @Body() userDto: CreateUserDto,
+  ): Promise<{ token: string }> {
     return this.authService.registerUser(userDto);
   }
 
+  @Post("/login")
   @ApiOperation(authDescription.loginUser.apiOperation)
   @ApiResponse(authDescription.loginUser.apiResponse)
-  @Post("/login")
-  async loginUser(@Body() loginUserDto: LoginUserDto): Promise<{token: string}> {
+  async loginUser(
+    @Body() loginUserDto: LoginUserDto,
+  ): Promise<{ token: string }> {
     return this.authService.loginUser(loginUserDto);
   }
 }
