@@ -8,9 +8,9 @@ import { authDescription } from "./auth-api.description";
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Post("/register")
   @ApiOperation(authDescription.registerUser.apiOperation)
   @ApiResponse(authDescription.registerUser.apiResponse)
-  @Post("/register")
   async registerUser(@Body() userDto: CreateUserDto): Promise<{token: string}> {
     return this.authService.registerUser(userDto);
   }
