@@ -14,7 +14,7 @@ import { LoginUserDto } from "../models/users/dto/login-user.dto";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 import { UserRequest } from "src/common/interfaces/user-request.interface";
 import { UserInterface } from "src/common/interfaces/user.interface";
-import { RefreshTokenRequest } from "src/common/interfaces/refresh-token-request.interface";
+import { AuhtRequest } from "src/common/interfaces/auth-request.interface";
 
 @Controller("auth")
 export class AuthController {
@@ -38,6 +38,19 @@ export class AuthController {
     return this.authService.loginUser(loginUserDto);
   }
 
+  @Post("/logout")
+  @ApiOperation(authDescription.loginUser.apiOperation)
+  @ApiResponse(authDescription.loginUser.apiResponse)
+  @UseGuards(JwtAuthGuard)
+  async logoutUser(
+    @Request() request: AuhtRequest,
+  ): Promise<void> {
+    const authHeader = request.headers.authorization;
+    const accessToken = authHeader && authHeader.split(" ")[1];
+
+    return this.authService.logoutUser(accessToken);
+  }
+
   @Get("/profile")
   @UseGuards(JwtAuthGuard)
   @ApiOperation(authDescription.getCurrentUser.apiOperation)
@@ -51,7 +64,7 @@ export class AuthController {
   @ApiOperation(authDescription.refreshToken.apiOperation)
   @ApiResponse(authDescription.refreshToken.apiResponse)
   async refreshToken(
-    @Request() request: RefreshTokenRequest,
+    @Request() request: AuhtRequest,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const authHeader = request.headers.authorization;
     const refreshToken = authHeader && authHeader.split(" ")[1];

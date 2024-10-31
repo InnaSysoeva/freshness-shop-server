@@ -109,10 +109,32 @@ export class AuthService {
       throw new UnauthorizedException(errorMessages.passwordValidation());
     }
 
-    const refreshToken = user.refreshToken;
+    const refreshToken = await this.generateRefreshToken(user.email);
     const accessToken = await this.generateAccesToken(user);
 
+    await this.usersService.updateUsersRefreshToken(
+      user._id.toString(),
+      refreshToken,
+    );
+
     return { accessToken, refreshToken };
+  }
+
+  async logoutUser(
+    token: string,
+  ): Promise<void> {
+    const user = this.jwtService.verify(token);
+
+    if (!user) {
+      throw new UnauthorizedException(errorMessages.passwordValidation());
+    }
+
+    await this.usersService.updateUsersRefreshToken(
+      user._id.toString(),
+      ""
+    );
+
+    return;
   }
 
   async refreshToken(
