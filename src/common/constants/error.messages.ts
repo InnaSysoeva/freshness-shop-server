@@ -5,6 +5,7 @@ const errorMessages = {
   notFound: (entity: string) => `${entity} not found`,
   emailValidation: () => `User with such email already exists`,
   passwordValidation: () => `Password is invalid`,
+  unauthorized: () => `User is unauthorized`,
 };
 
 export default errorMessages;
