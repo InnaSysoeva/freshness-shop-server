@@ -16,6 +16,7 @@ import {
   accessTokenExpirationTime,
   refreshTokenExpirationTime,
 } from "../common/constants/token-expiration.const";
+import { UserTokensInterface } from "src/common/interfaces/user-tokens.interface";
 
 @Injectable()
 export class AuthService {
@@ -36,27 +37,25 @@ export class AuthService {
       firstName,
       lastName,
     };
-    const accessToken = this.jwtService.sign(payload, {
-      expiresIn: accessTokenExpirationTime,
-    });
 
-    return accessToken;
+    return this.jwtService.sign(payload, {
+      expiresIn: accessTokenExpirationTime,
+    });;
   }
 
   async generateRefreshToken(email: string): Promise<string> {
     const payload = {
       email,
     };
-    const refreshToken = this.jwtService.sign(payload, {
-      expiresIn: refreshTokenExpirationTime,
-    });
 
-    return refreshToken;
+    return this.jwtService.sign(payload, {
+      expiresIn: refreshTokenExpirationTime,
+    });;
   }
 
   async registerUser(
     userDto: CreateUserDto,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<UserTokensInterface> {
     const user = await this.usersService.getUserByEmail(userDto.email);
 
     if (user) {
@@ -90,7 +89,7 @@ export class AuthService {
 
   async loginUser(
     loginUserDto: LoginUserDto,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<UserTokensInterface> {
     const user = await this.usersService.getUserByEmail(loginUserDto.email);
 
     if (!user) {
@@ -131,7 +130,7 @@ export class AuthService {
 
     await this.usersService.updateUsersRefreshToken(
       user._id.toString(),
-      ""
+      null
     );
 
     return;
@@ -139,7 +138,7 @@ export class AuthService {
 
   async refreshToken(
     currentRefreshToken: string,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<UserTokensInterface> {
     try {
       const decodedUser = this.jwtService.verify(currentRefreshToken);
       const user = await this.usersService.getUserByEmail(decodedUser.email);

@@ -15,6 +15,7 @@ import { JwtAuthGuard } from "./jwt-auth.guard";
 import { UserRequest } from "src/common/interfaces/user-request.interface";
 import { UserInterface } from "src/common/interfaces/user.interface";
 import { AuhtRequest } from "src/common/interfaces/auth-request.interface";
+import { UserTokensInterface } from "src/common/interfaces/user-tokens.interface";
 
 @Controller("auth")
 export class AuthController {
@@ -25,7 +26,7 @@ export class AuthController {
   @ApiResponse(authDescription.registerUser.apiResponse)
   async registerUser(
     @Body() userDto: CreateUserDto,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<UserTokensInterface> {
     return this.authService.registerUser(userDto);
   }
 
@@ -34,7 +35,7 @@ export class AuthController {
   @ApiResponse(authDescription.loginUser.apiResponse)
   async loginUser(
     @Body() loginUserDto: LoginUserDto,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<UserTokensInterface> {
     return this.authService.loginUser(loginUserDto);
   }
 
@@ -65,7 +66,7 @@ export class AuthController {
   @ApiResponse(authDescription.refreshToken.apiResponse)
   async refreshToken(
     @Request() request: AuhtRequest,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<UserTokensInterface> {
     const authHeader = request.headers.authorization;
     const refreshToken = authHeader && authHeader.split(" ")[1];
     
