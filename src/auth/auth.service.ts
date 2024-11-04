@@ -10,7 +10,6 @@ import { UsersService } from "../models/users/users.service";
 import * as bcrypt from "bcryptjs";
 import { hashRounds } from "../common/constants/hash.rounds.const";
 import errorMessages from "../common/constants/error.messages";
-import { isPasswordValid } from "../utils/password.validator";
 import { LoginUserDto } from "../models/users/dto/login-user.dto";
 import { UserInterface } from "src/common/interfaces/user.interface";
 
@@ -43,13 +42,6 @@ export class AuthService {
     if (user) {
       throw new HttpException(
         errorMessages.emailValidation(),
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    if (!isPasswordValid(userDto.password)) {
-      throw new HttpException(
-        errorMessages.passwordValidation(),
         HttpStatus.BAD_REQUEST,
       );
     }
