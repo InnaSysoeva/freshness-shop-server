@@ -8,7 +8,7 @@ import {
 } from "class-validator";
 import { passwordRegex } from "../../../common/constants/regex-expressions.const";
 
-export class CreateUserDto implements UserInterface {
+export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   readonly firstName: string;
