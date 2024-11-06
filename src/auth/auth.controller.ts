@@ -4,7 +4,7 @@ import {
   Post,
   Get,
   UseGuards,
-  Request,
+  Request
 } from "@nestjs/common";
 import { CreateUserDto } from "../models/users/dto/create-user.dto";
 import { AuthService } from "./auth.service";
@@ -37,19 +37,6 @@ export class AuthController {
     @Body() loginUserDto: LoginUserDto,
   ): Promise<UserTokensInterface> {
     return this.authService.loginUser(loginUserDto);
-  }
-
-  @Post("/logout")
-  @ApiOperation(authDescription.logoutUser.apiOperation)
-  @ApiResponse(authDescription.logoutUser.apiResponse)
-  @UseGuards(JwtAuthGuard)
-  async logoutUser(
-    @Request() request: AuhtRequest,
-  ): Promise<void> {
-    const authHeader = request.headers.authorization;
-    const accessToken = authHeader && authHeader.split(" ")[1];
-
-    return this.authService.logoutUser(accessToken);
   }
 
   @Get("/profile")

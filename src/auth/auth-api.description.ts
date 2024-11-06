@@ -62,16 +62,4 @@ export const authDescription = {
       },
     },
   },
-  logoutUser: {
-    apiOperation: {
-      summary: "Logout user",
-      description:
-        "This endpoint logs the user out by removing the refresh token from the system. It returns no response upon successful logout.",
-    },
-    apiResponse: {
-      status: 204,
-      description: "User logged out successfully, refresh token removed.",
-    },
-  },
-  
 };

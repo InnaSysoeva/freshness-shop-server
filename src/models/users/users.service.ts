@@ -22,11 +22,4 @@ export class UsersService {
 
     return user;
   }
-
-  async updateUsersRefreshToken(
-    userId: string,
-    refreshToken: string,
-  ): Promise<void> {
-    await this.userModel.findByIdAndUpdate(userId, { refreshToken });
-  }
 }
