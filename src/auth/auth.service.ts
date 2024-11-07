@@ -108,7 +108,7 @@ export class AuthService {
       throw new UnauthorizedException(errorMessages.passwordValidation());
     }
 
-    const refreshToken = user.refreshToken;
+    const refreshToken = await this.generateRefreshToken(user.email);
     const accessToken = await this.generateAccesToken(user);
 
     return { accessToken, refreshToken };
@@ -121,17 +121,12 @@ export class AuthService {
       const decodedUser = this.jwtService.verify(currentRefreshToken);
       const user = await this.usersService.getUserByEmail(decodedUser.email);
 
-      if (!user || user.refreshToken !== currentRefreshToken) {
+      if (!user) {
         throw new UnauthorizedException(errorMessages.refreshToken());
       }
 
       const refreshToken = await this.generateRefreshToken(user.email);
       const accessToken = await this.generateAccesToken(user);
-
-      await this.usersService.updateUsersRefreshToken(
-        user._id.toString(),
-        refreshToken,
-      );
 
       return {
         accessToken: accessToken,

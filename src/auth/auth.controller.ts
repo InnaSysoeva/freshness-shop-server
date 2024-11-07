@@ -4,7 +4,7 @@ import {
   Post,
   Get,
   UseGuards,
-  Request,
+  Request
 } from "@nestjs/common";
 import { CreateUserDto } from "../models/users/dto/create-user.dto";
 import { AuthService } from "./auth.service";
@@ -14,7 +14,7 @@ import { LoginUserDto } from "../models/users/dto/login-user.dto";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 import { UserRequest } from "src/common/interfaces/user-request.interface";
 import { UserInterface } from "src/common/interfaces/user.interface";
-import { RefreshTokenRequest } from "src/common/interfaces/refresh-token-request.interface";
+import { AuhtRequest } from "src/common/interfaces/auth-request.interface";
 import { UserTokensInterface } from "src/common/interfaces/user-tokens.interface";
 
 @Controller("auth")
@@ -52,7 +52,7 @@ export class AuthController {
   @ApiOperation(authDescription.refreshToken.apiOperation)
   @ApiResponse(authDescription.refreshToken.apiResponse)
   async refreshToken(
-    @Request() request: RefreshTokenRequest,
+    @Request() request: AuhtRequest,
   ): Promise<UserTokensInterface> {
     const authHeader = request.headers.authorization;
     const refreshToken = authHeader && authHeader.split(" ")[1];
