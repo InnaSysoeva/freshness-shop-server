@@ -1,4 +1,3 @@
-import { UserInterface } from "src/common/interfaces/user.interface";
 import {
   IsString,
   IsEmail,
@@ -31,5 +30,5 @@ export class CreateUserDto {
   @IsString()
   readonly phoneNumber?: string;
 
-  readonly accessToken?: string;
+  readonly refreshToken?: string;
 }

@@ -19,10 +19,10 @@ export const userApiDescription = {
       },
     },
   },
-  getUser: {
+  getUserByEmail: {
     apiOperation: {
       summary: "Retrieve a user",
-      description: "This endpoint allows you to retrieve a user.",
+      description: "This endpoint allows you to retrieve a user be email",
     },
     apiResponse: {
       status: 200,

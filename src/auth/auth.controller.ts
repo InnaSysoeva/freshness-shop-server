@@ -13,6 +13,9 @@ import { authDescription } from "./auth-api.description";
 import { LoginUserDto } from "../models/users/dto/login-user.dto";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 import { UserRequest } from "src/common/interfaces/user-request.interface";
+import { UserInterface } from "src/common/interfaces/user.interface";
+import { RefreshTokenRequest } from "src/common/interfaces/refresh-token-request.interface";
+import { UserTokensInterface } from "src/common/interfaces/user-tokens.interface";
 
 @Controller("auth")
 export class AuthController {
@@ -23,7 +26,7 @@ export class AuthController {
   @ApiResponse(authDescription.registerUser.apiResponse)
   async registerUser(
     @Body() userDto: CreateUserDto,
-  ): Promise<{ token: string }> {
+  ): Promise<UserTokensInterface> {
     return this.authService.registerUser(userDto);
   }
 
@@ -32,15 +35,28 @@ export class AuthController {
   @ApiResponse(authDescription.loginUser.apiResponse)
   async loginUser(
     @Body() loginUserDto: LoginUserDto,
-  ): Promise<{ token: string }> {
+  ): Promise<UserTokensInterface> {
     return this.authService.loginUser(loginUserDto);
   }
 
   @Get("/profile")
+  @UseGuards(JwtAuthGuard)
   @ApiOperation(authDescription.getCurrentUser.apiOperation)
   @ApiResponse(authDescription.getCurrentUser.apiResponse)
-  @UseGuards(JwtAuthGuard)
-  getCurrentUser(@Request() request: UserRequest) {
+  getCurrentUser(@Request() request: UserRequest): UserInterface {
     return request.user;
+  }
+
+  @Post("/refresh-token")
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation(authDescription.refreshToken.apiOperation)
+  @ApiResponse(authDescription.refreshToken.apiResponse)
+  async refreshToken(
+    @Request() request: RefreshTokenRequest,
+  ): Promise<UserTokensInterface> {
+    const authHeader = request.headers.authorization;
+    const refreshToken = authHeader && authHeader.split(" ")[1];
+    
+    return this.authService.refreshToken(refreshToken);
   }
 }
