@@ -5,7 +5,6 @@ import {
   IsArray,
   IsPositive,
   IsInt,
-  IsUrl,
 } from "class-validator";
 
 export class CreateProductDto {
@@ -43,4 +42,7 @@ export class CreateProductDto {
   category: string;
 
   subcategory: string;
+
+  @IsOptional()
+  additionalInformation?: { key: string; value: string }[];
 }

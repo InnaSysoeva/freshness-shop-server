@@ -34,6 +34,9 @@ export class Product {
 
   @Prop({ required: true })
   subcategory: string;
+
+  @Prop({required: false})
+  additionalInformation?: { key: string; value: string }[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

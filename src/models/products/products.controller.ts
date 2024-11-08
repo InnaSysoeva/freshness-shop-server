@@ -6,6 +6,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { ProductInterface } from "src/common/interfaces/product.interface";
 import { ProductFiltersInterface } from "src/common/interfaces/product-filters.interface";
 import { FilterQueryPipe } from "../../pipes/filter-query.pipe";
+import { CategoryRequest } from "src/common/interfaces/category-request.interface";
 
 @Controller("products")
 export class ProductsController {
@@ -20,6 +21,15 @@ export class ProductsController {
     @Query(new FilterQueryPipe()) filters: ProductFiltersInterface,
   ): Promise<ProductInterface[]> {
     return this.productsService.getProductsByPage(page, limit, filters);
+  }
+
+  @Get('/total-by-category')
+  @ApiOperation(productApiDescription.getProductsQuantitybyCategory.apiOperation)
+  @ApiResponse(productApiDescription.getProductsQuantitybyCategory.apiResponse)
+  async getProductsQuantitybyCategory(
+    @Body() categoryRequest: CategoryRequest
+  ): Promise<number> {
+    return this.productsService.getProductsQuantitybyCategory(categoryRequest.category);
   }
 
   @Post()

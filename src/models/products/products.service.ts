@@ -7,6 +7,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { ProductFiltersInterface } from "src/common/interfaces/product-filters.interface";
 import { buildFilterQuery } from "../../utils/buildFilterQuery";
 import errorMessages from "../../common/constants/error.messages";
+import { CategoryEnum } from "src/common/enums/category.enum";
 
 @Injectable()
 export class ProductsService {
@@ -41,7 +42,19 @@ export class ProductsService {
     } catch (error) {
       throw new HttpException(
         errorMessages.notFound("Products"),
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async getProductsQuantitybyCategory(category: CategoryEnum): Promise<number> {
+    try {
+      return await this.productModel.countDocuments({ category }).exec();
+    } catch (error) {
+      console.log(error)
+      throw new HttpException(
+        errorMessages.notFound("Products"),
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
