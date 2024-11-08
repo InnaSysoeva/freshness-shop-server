@@ -40,7 +40,7 @@ export class AuthService {
 
     return this.jwtService.sign(payload, {
       expiresIn: accessTokenExpirationTime,
-    });;
+    });
   }
 
   async generateRefreshToken(email: string): Promise<string> {
@@ -50,12 +50,10 @@ export class AuthService {
 
     return this.jwtService.sign(payload, {
       expiresIn: refreshTokenExpirationTime,
-    });;
+    });
   }
 
-  async registerUser(
-    userDto: CreateUserDto,
-  ): Promise<UserTokensInterface> {
+  async registerUser(userDto: CreateUserDto): Promise<UserTokensInterface> {
     const user = await this.usersService.getUserByEmail(userDto.email);
 
     if (user) {
@@ -87,9 +85,7 @@ export class AuthService {
     }
   }
 
-  async loginUser(
-    loginUserDto: LoginUserDto,
-  ): Promise<UserTokensInterface> {
+  async loginUser(loginUserDto: LoginUserDto): Promise<UserTokensInterface> {
     const user = await this.usersService.getUserByEmail(loginUserDto.email);
 
     if (!user) {
