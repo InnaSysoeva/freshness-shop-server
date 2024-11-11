@@ -6,7 +6,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { ProductInterface } from "src/common/interfaces/product.interface";
 import { ProductFiltersInterface } from "src/common/interfaces/product-filters.interface";
 import { CategoryRequest } from "src/common/interfaces/category-request.interface";
-import { QueryParamsPipe } from "src/pipes/query-params.pipe";
+import { QueryParamsPipe } from "../../pipes/query-params.pipe";
 
 @Controller("products")
 export class ProductsController {
