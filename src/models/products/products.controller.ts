@@ -5,7 +5,7 @@ import { productApiDescription } from "./product-api.description";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { ProductInterface } from "src/common/interfaces/product.interface";
 import { ProductFiltersInterface } from "src/common/interfaces/product-filters.interface";
-import { FilterQueryPipe } from "../../pipes/filter-query.pipe";
+import { QueryParamsPipe } from "../../pipes/query-params.pipe";
 
 @Controller("products")
 export class ProductsController {
@@ -15,9 +15,8 @@ export class ProductsController {
   @ApiOperation(productApiDescription.getProductsByPage.apiOperation)
   @ApiResponse(productApiDescription.getProductsByPage.apiResponse)
   async getProductsByPage(
-    @Query("page") page: number,
-    @Query("limit") limit: number,
-    @Query(new FilterQueryPipe()) filters: ProductFiltersInterface,
+    @Query(new QueryParamsPipe()) { page, limit, filters }:
+    { page: number, limit: number, filters: ProductFiltersInterface }
   ): Promise<ProductInterface[]> {
     return this.productsService.getProductsByPage(page, limit, filters);
   }
