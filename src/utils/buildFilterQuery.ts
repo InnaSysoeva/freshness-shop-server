@@ -6,7 +6,7 @@ export function buildFilterQuery(
   const query: Record<string, any> = {};
 
   Object.entries(filters).forEach(([key, value]) => {
-    if (Array.isArray(value) && value.length > 0) {
+    if (Array.isArray(value) && value.length) {
       query[key] = { $in: value };
     } else if (key === "minPrice" || key === "maxPrice") {
       if (!query.price) query.price = {};

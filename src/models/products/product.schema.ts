@@ -33,7 +33,7 @@ export class Product {
   category: string;
 
   @Prop({ required: true })
-  subcategory: string;
+  subcategory: string[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

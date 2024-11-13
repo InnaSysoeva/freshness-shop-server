@@ -10,5 +10,5 @@ export interface ProductInterface {
   images: string[];
   discount?: number;
   category: string;
-  subcategory: string;
+  subcategory: string[];
 }

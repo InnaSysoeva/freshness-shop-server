@@ -4,4 +4,5 @@ export interface ProductFiltersInterface {
   minPrice?: number;
   maxPrice?: number;
   rating?: number;
+  subcategory?: string[];
 }
