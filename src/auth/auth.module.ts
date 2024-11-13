@@ -20,5 +20,4 @@ import { accessTokenExpirationTime } from "../common/constants/token-expiration.
   controllers: [AuthController],
   providers: [AuthService],
 })
-
 export class AuthModule {}

@@ -4,7 +4,7 @@ import {
   Post,
   Get,
   UseGuards,
-  Request
+  Request,
 } from "@nestjs/common";
 import { CreateUserDto } from "../models/users/dto/create-user.dto";
 import { AuthService } from "./auth.service";
@@ -56,7 +56,7 @@ export class AuthController {
   ): Promise<UserTokensInterface> {
     const authHeader = request.headers.authorization;
     const refreshToken = authHeader && authHeader.split(" ")[1];
-    
+
     return this.authService.refreshToken(refreshToken);
   }
 }
