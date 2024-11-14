@@ -72,9 +72,9 @@ export const productApiDescription = {
     },
     apiResponse: {
       status: 200,
-      description: "Successfully retrieved the quantity of products for the category.",
+      description:
+        "Successfully retrieved the quantity of products for the category.",
       example: 120,
     },
   },
-  
 };

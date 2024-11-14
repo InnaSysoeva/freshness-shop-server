@@ -7,7 +7,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { ProductFiltersInterface } from "src/common/interfaces/product-filters.interface";
 import { buildFilterQuery } from "../../utils/buildFilterQuery";
 import errorMessages from "../../common/constants/error.messages";
-import { CategoryEnum } from "src/common/enums/category.enum";
+import { CategoryEnum } from "../../common/enums/category.enum";
 
 @Injectable()
 export class ProductsService {
@@ -47,11 +47,31 @@ export class ProductsService {
     }
   }
 
-  async getProductsQuantitybyCategory(category: CategoryEnum): Promise<number> {
+  async getProductsQuantitybyCategories(): Promise<Record<number, number>> {
+    const categories = Object.values(CategoryEnum).filter(
+      (value) => typeof value === "number",
+    );
+
     try {
-      return await this.productModel.countDocuments({ category }).exec();
+      const result = await this.productModel.aggregate([
+        { $match: { category: { $in: categories } } },
+        {
+          $group: {
+            _id: "$category",
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+
+      const productQuantities: Record<number, number> = {};
+
+      result.forEach((item) => {
+        productQuantities[item._id] = item.count;
+      });
+
+      return productQuantities;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new HttpException(
         errorMessages.notFound("Products"),
         HttpStatus.INTERNAL_SERVER_ERROR,

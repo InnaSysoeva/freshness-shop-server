@@ -12,11 +12,11 @@ export interface ProductInterface {
   images: string[];
   discount?: number;
   category: CategoryEnum;
-  subcategory: string;
+  subcategory: string[];
   additionaInformation?: [
     {
-      key: string, 
-      value: string
-    }
-  ]
+      key: string;
+      value: string;
+    },
+  ];
 }

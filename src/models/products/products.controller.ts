@@ -5,7 +5,6 @@ import { productApiDescription } from "./product-api.description";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { ProductInterface } from "src/common/interfaces/product.interface";
 import { ProductFiltersInterface } from "src/common/interfaces/product-filters.interface";
-import { CategoryRequest } from "src/common/interfaces/category-request.interface";
 import { QueryParamsPipe } from "../../pipes/query-params.pipe";
 
 @Controller("products")
@@ -16,18 +15,27 @@ export class ProductsController {
   @ApiOperation(productApiDescription.getProductsByPage.apiOperation)
   @ApiResponse(productApiDescription.getProductsByPage.apiResponse)
   async getProductsByPage(
-    @Query(new QueryParamsPipe()) { page, limit, filters }: { page: number, limit: number, filters: ProductFiltersInterface }
+    @Query(new QueryParamsPipe())
+    {
+      page,
+      limit,
+      filters,
+    }: {
+      page: number;
+      limit: number;
+      filters: ProductFiltersInterface;
+    },
   ): Promise<ProductInterface[]> {
     return this.productsService.getProductsByPage(page, limit, filters);
   }
 
-  @Get('/total-by-category')
-  @ApiOperation(productApiDescription.getProductsQuantitybyCategory.apiOperation)
+  @Get("/total-by-categories")
+  @ApiOperation(
+    productApiDescription.getProductsQuantitybyCategory.apiOperation,
+  )
   @ApiResponse(productApiDescription.getProductsQuantitybyCategory.apiResponse)
-  async getProductsQuantitybyCategory(
-    @Body() categoryRequest: CategoryRequest
-  ): Promise<number> {
-    return this.productsService.getProductsQuantitybyCategory(categoryRequest.category);
+  async getProductsQuantitybyCategories(): Promise<Record<number, number>> {
+    return this.productsService.getProductsQuantitybyCategories();
   }
 
   @Post()
