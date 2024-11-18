@@ -64,4 +64,17 @@ export const productApiDescription = {
       },
     },
   },
+  getProductsQuantitybyCategory: {
+    apiOperation: {
+      summary: "Get products quantity by category",
+      description:
+        "This endpoint retrieves the total quantity of products available in the specified category.",
+    },
+    apiResponse: {
+      status: 200,
+      description:
+        "Successfully retrieved the quantity of products for the category.",
+      example: 120,
+    },
+  },
 };

@@ -3,6 +3,5 @@ export interface ProductFiltersInterface {
   brand?: string[];
   minPrice?: number;
   maxPrice?: number;
-  rating?: number;
-  subcategory?: string[];
+  rating?: number[];
 }

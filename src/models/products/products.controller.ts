@@ -15,10 +15,27 @@ export class ProductsController {
   @ApiOperation(productApiDescription.getProductsByPage.apiOperation)
   @ApiResponse(productApiDescription.getProductsByPage.apiResponse)
   async getProductsByPage(
-    @Query(new QueryParamsPipe()) { page, limit, filters }:
-    { page: number, limit: number, filters: ProductFiltersInterface }
+    @Query(new QueryParamsPipe())
+    {
+      page,
+      limit,
+      filters,
+    }: {
+      page: number;
+      limit: number;
+      filters: ProductFiltersInterface;
+    },
   ): Promise<ProductInterface[]> {
     return this.productsService.getProductsByPage(page, limit, filters);
+  }
+
+  @Get("/total-by-categories")
+  @ApiOperation(
+    productApiDescription.getProductsQuantitybyCategory.apiOperation,
+  )
+  @ApiResponse(productApiDescription.getProductsQuantitybyCategory.apiResponse)
+  async getProductsQuantitybyCategories(): Promise<Record<string, number>> {
+    return this.productsService.getProductsQuantitybyCategories();
   }
 
   @Post()

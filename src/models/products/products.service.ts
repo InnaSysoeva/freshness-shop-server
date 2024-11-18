@@ -7,6 +7,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { ProductFiltersInterface } from "src/common/interfaces/product-filters.interface";
 import { buildFilterQuery } from "../../utils/buildFilterQuery";
 import errorMessages from "../../common/constants/error.messages";
+import { CategoryEnum } from "../../common/enums/category.enum";
 
 @Injectable()
 export class ProductsService {
@@ -41,7 +42,42 @@ export class ProductsService {
     } catch (error) {
       throw new HttpException(
         errorMessages.notFound("Products"),
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async getProductsQuantitybyCategories(): Promise<Record<string, number>> {
+    const categories = Object.values(CategoryEnum)
+
+    try {
+      const result = await this.productModel.aggregate([
+        { $match: { category: { $in: categories } } },
+        {
+          $group: {
+            _id: "$category",
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+
+      const productQuantities: Record<string, number> = {};
+
+      result.forEach((item) => {
+        productQuantities[item._id] = item.count;
+      });
+
+      categories.forEach((category) => {
+        if (!productQuantities[category]) {
+          productQuantities[category] = 0;
+        }
+      });
+
+      return productQuantities;
+    } catch (error) {
+      throw new HttpException(
+        errorMessages.notFound("Products"),
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }

@@ -1,3 +1,5 @@
+import { CategoryEnum } from "../enums/category.enum";
+
 export interface ProductInterface {
   _id: string;
   title: string;
@@ -9,6 +11,12 @@ export interface ProductInterface {
   country: string;
   images: string[];
   discount?: number;
-  category: string;
+  category: CategoryEnum;
   subcategory: string[];
+  additionaInformation?: [
+    {
+      key: string;
+      value: string;
+    },
+  ];
 }

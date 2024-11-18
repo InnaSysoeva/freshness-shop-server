@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { CategoryEnum } from "../../common/enums/category.enum";
 
 @Schema()
 export class Product {
@@ -30,10 +31,13 @@ export class Product {
   discount?: number;
 
   @Prop({ required: true })
-  category: string;
+  category: CategoryEnum;
 
   @Prop({ required: true })
   subcategory: string[];
+
+  @Prop({ required: false })
+  additionalInformation?: { key: string; value: string }[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
