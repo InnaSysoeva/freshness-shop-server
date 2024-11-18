@@ -47,10 +47,8 @@ export class ProductsService {
     }
   }
 
-  async getProductsQuantitybyCategories(): Promise<Record<number, number>> {
-    const categories = Object.values(CategoryEnum).filter(
-      (value) => typeof value === "number",
-    );
+  async getProductsQuantitybyCategories(): Promise<Record<string, number>> {
+    const categories = Object.values(CategoryEnum)
 
     try {
       const result = await this.productModel.aggregate([
@@ -63,15 +61,20 @@ export class ProductsService {
         },
       ]);
 
-      const productQuantities: Record<number, number> = {};
+      const productQuantities: Record<string, number> = {};
 
       result.forEach((item) => {
         productQuantities[item._id] = item.count;
       });
 
+      categories.forEach((category) => {
+        if (!productQuantities[category]) {
+          productQuantities[category] = 0;
+        }
+      });
+
       return productQuantities;
     } catch (error) {
-      console.log(error);
       throw new HttpException(
         errorMessages.notFound("Products"),
         HttpStatus.INTERNAL_SERVER_ERROR,

@@ -1,10 +1,10 @@
 export enum CategoryEnum {
-  Electronics = 1,
-  Food = 2,
-  Clothes = 3,
-  SkinAndCare = 4,
-  Toys = 5,
-  SpecialNutrition = 6,
-  SportsAndOutdoors = 7,
-  Books = 8,
+  Electronics = "Electronics",
+  Food = "Food",
+  Clothes = "Clothes",
+  SkinAndCare = "Skin and Care",
+  Toys = "Toys",
+  SpecialNutrition = "Special Nutrition",
+  SportsAndOutdoors = "Sports and Outdoors",
+  Books = "Books",
 }

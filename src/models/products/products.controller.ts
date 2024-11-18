@@ -34,7 +34,7 @@ export class ProductsController {
     productApiDescription.getProductsQuantitybyCategory.apiOperation,
   )
   @ApiResponse(productApiDescription.getProductsQuantitybyCategory.apiResponse)
-  async getProductsQuantitybyCategories(): Promise<Record<number, number>> {
+  async getProductsQuantitybyCategories(): Promise<Record<string, number>> {
     return this.productsService.getProductsQuantitybyCategories();
   }
 
