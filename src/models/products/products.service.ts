@@ -29,11 +29,11 @@ export class ProductsService {
     filters: ProductFiltersInterface,
   ): Promise<ProductInterface[]> {
     const skip = (page - 1) * limit;
-    const query = buildFilterQuery(filters);
-    let products: ProductInterface[]
+    const { query, sortQuery } = buildFilterQuery(filters);
+    let products: ProductInterface[];
 
     try {
-      if(query.price) {
+      if (query.price) {
         delete query.price;
 
         products = await this.productModel.aggregate([
@@ -42,10 +42,10 @@ export class ProductsService {
               discountedPrice: {
                 $multiply: [
                   "$price",
-                  {$subtract: [1, {$divide: ["$discount", 100]}]}
-                ]
-              }
-            }
+                  { $subtract: [1, { $divide: ["$discount", 100] }] },
+                ],
+              },
+            },
           },
           {
             $match: {
@@ -54,21 +54,23 @@ export class ProductsService {
                 {
                   discountedPrice: {
                     $gte: Number(filters.minPrice),
-                    $lte: Number(filters.maxPrice)
-                  }
-                }
-              ]
-            }
-        },
-        {$skip: skip},
-        {$limit: Number(limit)} 
-        ])
+                    $lte: Number(filters.maxPrice),
+                  },
+                },
+              ],
+            },
+          },
+          { $sort: sortQuery },
+          { $skip: skip },
+          { $limit: Number(limit) },
+        ]);
       } else {
         products = await this.productModel
-         .find(query)
-         .skip(skip)
-         .limit(limit)
-         .exec();
+          .find(query)
+          .sort(sortQuery)
+          .skip(skip)
+          .limit(limit)
+          .exec();
       }
 
       return products;
@@ -81,7 +83,7 @@ export class ProductsService {
   }
 
   async getProductsQuantitybyCategories(): Promise<Record<string, number>> {
-    const categories = Object.values(CategoryEnum)
+    const categories = Object.values(CategoryEnum);
 
     try {
       const result = await this.productModel.aggregate([

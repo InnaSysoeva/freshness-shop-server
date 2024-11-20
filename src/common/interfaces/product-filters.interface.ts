@@ -5,4 +5,6 @@ export interface ProductFiltersInterface {
   maxPrice?: number;
   rating?: number[];
   subcategory?: string;
+  sortDirection?: string;
+  sort?: string;
 }
