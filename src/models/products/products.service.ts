@@ -71,7 +71,6 @@ export class ProductsService {
               ],
             },
           },
-          //{ $sort: sortQuery },
           ...(Object.keys(sortQuery).length > 0 ? [{ $sort: sortQuery }] : []),
           { $skip: skip },
           { $limit: Number(limit) },
