@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Param } from "@nestjs/common";
 import { ProductsService } from "./products.service";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { productApiDescription } from "./product-api.description";
@@ -36,6 +36,13 @@ export class ProductsController {
   @ApiResponse(productApiDescription.getProductsQuantitybyCategory.apiResponse)
   async getProductsQuantitybyCategories(): Promise<Record<string, number>> {
     return this.productsService.getProductsQuantitybyCategories();
+  }
+
+  @Get(":id")
+  @ApiOperation(productApiDescription.getProductById.apiOperation)
+  @ApiResponse(productApiDescription.getProductById.apiResponse)
+  async getProductById(@Param("id") id: string): Promise<ProductInterface> {
+    return this.productsService.getProductById(id);
   }
 
   @Post()
