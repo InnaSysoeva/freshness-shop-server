@@ -29,14 +29,49 @@ export class ProductsService {
     filters: ProductFiltersInterface,
   ): Promise<ProductInterface[]> {
     const skip = (page - 1) * limit;
-    const query = buildFilterQuery(filters);
+    const { query, sortQuery } = buildFilterQuery(filters);
+    let products: ProductInterface[];
 
     try {
-      const products = await this.productModel
-        .find(query)
-        .skip(skip)
-        .limit(limit)
-        .exec();
+      if (query.price) {
+        delete query.price;
+
+        products = await this.productModel.aggregate([
+          {
+            $addFields: {
+              discountedPrice: {
+                $multiply: [
+                  "$price",
+                  { $subtract: [1, { $divide: ["$discount", 100] }] },
+                ],
+              },
+            },
+          },
+          {
+            $match: {
+              $and: [
+                query,
+                {
+                  discountedPrice: {
+                    $gte: Number(filters.minPrice),
+                    $lte: Number(filters.maxPrice),
+                  },
+                },
+              ],
+            },
+          },
+          { $sort: sortQuery },
+          { $skip: skip },
+          { $limit: Number(limit) },
+        ]);
+      } else {
+        products = await this.productModel
+          .find(query)
+          .sort(sortQuery)
+          .skip(skip)
+          .limit(limit)
+          .exec();
+      }
 
       return products;
     } catch (error) {
@@ -48,7 +83,7 @@ export class ProductsService {
   }
 
   async getProductsQuantitybyCategories(): Promise<Record<string, number>> {
-    const categories = Object.values(CategoryEnum)
+    const categories = Object.values(CategoryEnum);
 
     try {
       const result = await this.productModel.aggregate([
