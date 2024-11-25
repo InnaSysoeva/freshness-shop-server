@@ -23,6 +23,17 @@ export class ProductsService {
     return product.save();
   }
 
+  async getProductById(id: string): Promise<ProductInterface> {
+    try {
+      return await this.productModel.findById(id).exec();
+    } catch {
+      throw new HttpException(
+        errorMessages.notFound("Product"),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async getProductsByPage(
     page: number,
     limit: number,
@@ -60,7 +71,8 @@ export class ProductsService {
               ],
             },
           },
-          { $sort: sortQuery },
+          //{ $sort: sortQuery },
+          ...(Object.keys(sortQuery).length > 0 ? [{ $sort: sortQuery }] : []),
           { $skip: skip },
           { $limit: Number(limit) },
         ]);

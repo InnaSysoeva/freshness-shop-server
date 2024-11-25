@@ -13,7 +13,7 @@ export interface ProductInterface {
   discount?: number;
   category: CategoryEnum;
   subcategory: string;
-  additionaInformation?: [
+  additionalInformation?: [
     {
       key: string;
       value: string;

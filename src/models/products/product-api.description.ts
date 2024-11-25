@@ -77,4 +77,29 @@ export const productApiDescription = {
       example: 120,
     },
   },
+  getProductById: {
+    apiOperation: {
+      summary: "Get product by ID",
+      description:
+        "This endpoint retrieves the details of a specific product by its ID.",
+    },
+    apiResponse: {
+      status: 200,
+      description: "Successfully retrieved the product.",
+      example: {
+        _id: "1",
+        title: "Product 1",
+        description: "This is product 1.",
+        rating: 4.5,
+        price: 100,
+        quantity: 50,
+        brand: "Brand A",
+        country: "USA",
+        images: ["image1.jpg", "image2.jpg"],
+        discount: 10,
+        category: "Electronics",
+        subcategory: "Mobile Phones",
+      },
+    },
+  },
 };
