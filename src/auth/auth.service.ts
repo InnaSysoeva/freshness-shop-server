@@ -25,7 +25,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async generateAccesToken({
+  async generateAccessToken({
     _id,
     email,
     firstName,
@@ -74,7 +74,7 @@ export class AuthService {
         refreshToken: refreshToken,
       });
 
-      const accessToken = await this.generateAccesToken(newUser);
+      const accessToken = await this.generateAccessToken(newUser);
 
       return { accessToken, refreshToken };
     } catch (error) {
@@ -105,7 +105,7 @@ export class AuthService {
     }
 
     const refreshToken = await this.generateRefreshToken(user.email);
-    const accessToken = await this.generateAccesToken(user);
+    const accessToken = await this.generateAccessToken(user);
 
     return { accessToken, refreshToken };
   }
@@ -122,7 +122,7 @@ export class AuthService {
       }
 
       const refreshToken = await this.generateRefreshToken(user.email);
-      const accessToken = await this.generateAccesToken(user);
+      const accessToken = await this.generateAccessToken(user);
 
       return {
         accessToken: accessToken,
@@ -130,6 +130,17 @@ export class AuthService {
       };
     } catch (error) {
       throw new UnauthorizedException(errorMessages.refreshToken());
+    }
+  }
+
+  async getCurrentUser(userEmail: string): Promise<UserInterface> {
+    try {
+      return await this.usersService.getUserByEmail(userEmail);
+    } catch (error) {
+      throw new HttpException(
+        errorMessages.notFound("User with such email"),
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

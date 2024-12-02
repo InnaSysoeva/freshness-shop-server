@@ -8,4 +8,5 @@ export interface UserInterface extends Document {
   phoneNumber?: string;
   accessToken?: string;
   refreshToken?: string;
+  wishList?: string[];
 }
