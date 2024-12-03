@@ -45,6 +45,13 @@ export class ProductsController {
     return this.productsService.getProductById(id);
   }
 
+  @Post("/get-by-ids")
+  @ApiOperation(productApiDescription.getProductsByIds.apiOperation)
+  @ApiResponse(productApiDescription.getProductsByIds.apiResponse)
+  async getProductsByIds(@Body() ids: string[]): Promise<ProductInterface[]> {
+    return this.productsService.getProductsByIds(ids);
+  }
+
   @Post()
   @ApiOperation(productApiDescription.createProduct.apiOperation)
   @ApiResponse(productApiDescription.createProduct.apiResponse)

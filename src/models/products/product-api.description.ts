@@ -102,4 +102,45 @@ export const productApiDescription = {
       },
     },
   },
+  getProductsByIds: {
+    apiOperation: {
+      summary: "Get products by multiple IDs",
+      description:
+        "This endpoint retrieves details of products based on an array of provided IDs. It returns an array of products matching those IDs.",
+    },
+    apiResponse: {
+      status: 200,
+      description: "Products retrieved successfully by their IDs.",
+      example: [
+        {
+          _id: "1",
+          title: "Product 1",
+          description: "This is product 1.",
+          rating: 4.5,
+          price: 100,
+          quantity: 50,
+          brand: "Brand A",
+          country: "USA",
+          images: ["image1.jpg", "image2.jpg"],
+          discount: 10,
+          category: "Electronics",
+          subcategory: "Mobile Phones",
+        },
+        {
+          _id: "2",
+          title: "Product 2",
+          description: "This is product 2.",
+          rating: 4.8,
+          price: 150,
+          quantity: 30,
+          brand: "Brand B",
+          country: "Germany",
+          images: ["image3.jpg", "image4.jpg"],
+          discount: 5,
+          category: "Home Appliances",
+          subcategory: "Refrigerators",
+        },
+      ],
+    },
+  },  
 };

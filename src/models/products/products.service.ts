@@ -34,6 +34,17 @@ export class ProductsService {
     }
   }
 
+  async getProductsByIds(ids: string[]): Promise<ProductInterface[]> {
+    try {
+      return await this.productModel.find({ _id: { $in: ids } });
+    } catch {
+      throw new HttpException(
+        errorMessages.notFound("Product"),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async getProductsByPage(
     page: number,
     limit: number,
