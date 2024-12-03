@@ -1,6 +1,6 @@
 import { Request } from "express";
 
-export interface AuhtRequest extends Request {
+export interface AuthRequest extends Request {
   headers: {
     authorization?: string;
   };

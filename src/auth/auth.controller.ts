@@ -14,7 +14,7 @@ import { LoginUserDto } from "../models/users/dto/login-user.dto";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 import { UserRequest } from "src/common/interfaces/user-request.interface";
 import { UserInterface } from "src/common/interfaces/user.interface";
-import { AuhtRequest } from "src/common/interfaces/auth-request.interface";
+import { AuthRequest } from "src/common/interfaces/auth-request.interface";
 import { UserTokensInterface } from "src/common/interfaces/user-tokens.interface";
 
 @Controller("auth")
@@ -43,8 +43,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation(authDescription.getCurrentUser.apiOperation)
   @ApiResponse(authDescription.getCurrentUser.apiResponse)
-  getCurrentUser(@Request() request: UserRequest): UserInterface {
-    return request.user;
+  getCurrentUser(@Request() request: UserRequest): Promise<UserInterface> {
+    return this.authService.getCurrentUser(request.user.email);
   }
 
   @Post("/refresh-token")
@@ -52,7 +52,7 @@ export class AuthController {
   @ApiOperation(authDescription.refreshToken.apiOperation)
   @ApiResponse(authDescription.refreshToken.apiResponse)
   async refreshToken(
-    @Request() request: AuhtRequest,
+    @Request() request: AuthRequest,
   ): Promise<UserTokensInterface> {
     const authHeader = request.headers.authorization;
     const refreshToken = authHeader && authHeader.split(" ")[1];
