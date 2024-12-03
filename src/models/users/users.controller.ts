@@ -32,7 +32,7 @@ export class UsersController {
   @ApiOperation(userApiDescription.getWishList.apiOperation)
   @ApiResponse(userApiDescription.getWishList.apiResponse)
   async getWishList(@Request() request: UserRequest): Promise<string[]> {
-    return this.usersService.getWishList(String(request.user._id));
+    return this.usersService.getWishList(request.user._id);
   }
 
   @Patch("/wish-list/add/:id")
@@ -43,7 +43,7 @@ export class UsersController {
     @Param("id") productId: string,
     @Request() request: UserRequest,
   ): Promise<void> {
-    return this.usersService.addToWishList(productId, String(request.user._id));
+    return this.usersService.addToWishList(productId, request.user._id);
   }
 
   @Patch("/wish-list/remove/:id")
@@ -56,7 +56,7 @@ export class UsersController {
   ): Promise<void> {
     return this.usersService.removeFromWishList(
       productId,
-      String(request.user._id),
+      request.user._id,
     );
   }
 
@@ -65,6 +65,6 @@ export class UsersController {
   @ApiOperation(userApiDescription.removeAllFromWishList.apiOperation)
   @ApiResponse(userApiDescription.removeAllFromWishList.apiResponse)
   async removeAllFromWishList(@Request() request: UserRequest): Promise<void> {
-    return this.usersService.removeAllFromWishList(String(request.user._id));
+    return this.usersService.removeAllFromWishList(request.user._id);
   }
 }
