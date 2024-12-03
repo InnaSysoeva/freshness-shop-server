@@ -42,10 +42,10 @@ export class UsersService {
 
   async removeFromWishList(productId: string, userId: string): Promise<void> {
     try {
-      const user = await this.userModel.findById(userId);
-      user.wishList = user.wishList.filter((item) => item !== productId);
-
-      await user.save();
+      await this.userModel.findByIdAndUpdate(
+        userId,
+        { $pull: { wishList: productId } },
+      );
     } catch {
       throw new HttpException(
         errorMessages.notFound("User"),
