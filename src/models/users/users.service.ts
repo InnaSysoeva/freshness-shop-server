@@ -30,6 +30,7 @@ export class UsersService {
 
       if (!user.wishList.includes(productId)) {
         user.wishList.push(productId);
+
         await user.save();
       }
     } catch {
@@ -42,10 +43,9 @@ export class UsersService {
 
   async removeFromWishList(productId: string, userId: string): Promise<void> {
     try {
-      await this.userModel.findByIdAndUpdate(
-        userId,
-        { $pull: { wishList: productId } },
-      );
+      await this.userModel.findByIdAndUpdate(userId, {
+        $pull: { wishList: productId },
+      });
     } catch {
       throw new HttpException(
         errorMessages.notFound("User"),
