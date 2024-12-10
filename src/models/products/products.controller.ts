@@ -25,7 +25,7 @@ export class ProductsController {
       limit: number;
       filters: ProductFiltersInterface;
     },
-  ): Promise<ProductInterface[]> {
+  ): Promise<{ products: ProductInterface[]; productsQuantity: number }> {
     return this.productsService.getProductsByPage(page, limit, filters);
   }
 

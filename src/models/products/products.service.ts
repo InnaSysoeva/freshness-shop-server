@@ -49,10 +49,14 @@ export class ProductsService {
     page: number,
     limit: number,
     filters: ProductFiltersInterface,
-  ): Promise<ProductInterface[]> {
+  ): Promise<{ products: ProductInterface[]; productsQuantity: number }> {
     const skip = (page - 1) * limit;
     const { query, sortQuery } = buildFilterQuery(filters);
     let products: ProductInterface[];
+
+    const productsQuantity = await this.productModel
+      .countDocuments(query)
+      .exec();
 
     try {
       if (query.price) {
@@ -95,7 +99,10 @@ export class ProductsService {
           .exec();
       }
 
-      return products;
+      return {
+        products: products,
+        productsQuantity: productsQuantity,
+      };
     } catch (error) {
       throw new HttpException(
         errorMessages.notFound("Products"),
