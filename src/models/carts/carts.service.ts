@@ -5,6 +5,7 @@ import { Cart } from "./cart.schema";
 import { CartInterface } from "src/common/interfaces/cart.interface";
 import { OrderItemInterface } from "src/common/interfaces/order-item.interface";
 import errorMessages from "../../common/constants/error.messages";
+import { getProduct } from "../../utils/getProduct";
 
 @Injectable()
 export class CartsService {
@@ -37,12 +38,7 @@ export class CartsService {
       let cart = await this.cartModel.findOne({ userId });
 
       if (cart) {
-        const existingProduct = cart.products.find(
-          (product) =>
-            product.productId === newProduct.productId &&
-            product?.color === newProduct?.color &&
-            product?.size === newProduct?.size,
-        );
+        const existingProduct = getProduct(cart.products, newProduct);
 
         if (existingProduct) {
           existingProduct.quantity += newProduct.quantity;

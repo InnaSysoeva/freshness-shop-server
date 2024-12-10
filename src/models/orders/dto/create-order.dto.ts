@@ -85,12 +85,8 @@ export class CreateOrderDto {
   notes?: string;
 
   @Type(() => Date)
-  //@IsDate()
-  //@IsNotEmpty()
   createdAt: Date;
 
   @Type(() => Date)
-  //@IsDate()
-  //@IsNotEmpty()
   updatedAt: Date;
 }
