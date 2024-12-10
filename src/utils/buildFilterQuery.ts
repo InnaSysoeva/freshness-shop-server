@@ -5,6 +5,7 @@ export function buildFilterQuery(
 ): Record<string, any> {
   const query: Record<string, any> = {};
   let sortOptions: Record<string, number> = {};
+  let search: string = null;
 
   Object.entries(filters).forEach(([key, value]) => {
     if (key === "rating") {
@@ -21,7 +22,7 @@ export function buildFilterQuery(
       if (!query.price) query.price = {};
       if (key === "minPrice") query.price.$gte = value;
       if (key === "maxPrice") query.price.$lte = value;
-    } else if (key !== "sort" && key !== "sortDirection") {
+    } else if (key !== "sort" && key !== "sortDirection" && key !== "search") {
       query[key] = value;
     }
   });
@@ -30,8 +31,13 @@ export function buildFilterQuery(
     sortOptions[filters.sort] = Number(filters.sortDirection);
   }
 
+  if (filters.search) {
+    search = filters.search;
+  }
+
   return {
     query,
     sortQuery: sortOptions,
+    search,
   };
 }
