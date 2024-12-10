@@ -17,10 +17,7 @@ export class CartsService {
       const cart = await this.cartModel.findOne({ userId });
 
       if (!cart) {
-        throw new HttpException(
-          errorMessages.notFound("Cart"),
-          HttpStatus.BAD_REQUEST,
-        );
+        return { userId: userId, products: [] };
       }
 
       return cart;
@@ -39,12 +36,7 @@ export class CartsService {
     try {
       let cart = await this.cartModel.findOne({ userId });
 
-      if (!cart) {
-        cart = new this.cartModel({
-          userId,
-          products: [newProduct],
-        });
-      } else {
+      if (cart) {
         const existingProduct = cart.products.find(
           (product) =>
             product.productId === newProduct.productId &&
@@ -57,6 +49,11 @@ export class CartsService {
         } else {
           cart.products.push(newProduct);
         }
+      } else {
+        cart = new this.cartModel({
+          userId,
+          products: [newProduct],
+        });
       }
 
       return await cart.save();
