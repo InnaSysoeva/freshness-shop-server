@@ -8,6 +8,7 @@ import {
   Param,
   Get,
   UseGuards,
+  Put,
 } from "@nestjs/common";
 import { CartsService } from "./carts.service";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
@@ -40,6 +41,17 @@ export class CartsController {
     @Request() request: UserRequest,
   ): Promise<CartInterface> {
     return this.cartsService.addToCart(product, request.user._id);
+  }
+
+  @Put()
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation(cartApiDescription.updateCart.apiOperation)
+  @ApiResponse(cartApiDescription.updateCart.apiResponse)
+  async updateCart(
+    @Body() product: OrderItemInterface,
+    @Request() request: UserRequest,
+  ): Promise<CartInterface> {
+    return this.cartsService.updateCart(product, request.user._id);
   }
 
   @Patch(":id")
