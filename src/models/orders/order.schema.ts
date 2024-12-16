@@ -25,9 +25,6 @@ export class Order {
   @Prop({ required: true })
   totalPrice: number;
 
-  @Prop({ required: true })
-  isComplete: boolean;
-
   @Prop()
   userId: string | null;
 

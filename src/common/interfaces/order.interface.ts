@@ -4,7 +4,6 @@ export interface OrderInterface {
   _id: string;
   products: OrderItemInterface[];
   totalPrice: number;
-  isComplete: boolean;
   userId: string | null;
   firstName: string;
   lastName: string;

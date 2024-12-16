@@ -8,6 +8,7 @@ import { AuthModule } from "./auth/auth.module";
 import { ProductsModule } from "./models/products/products.module";
 import { OrdersModule } from "./models/orders/orders.module";
 import { CartsModule } from "./models/carts/carts.module";
+import { LocationsModule } from "./models/locations/locations.module";
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CartsModule } from "./models/carts/carts.module";
     ProductsModule,
     OrdersModule,
     CartsModule,
+    LocationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
