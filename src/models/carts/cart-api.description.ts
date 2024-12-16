@@ -79,4 +79,32 @@ export const cartApiDescription = {
       description: "Cart deleted successfully. No content is returned.",
     },
   },
+  updateCart: {
+    apiOperation: {
+      summary: "Update a product in the user's cart",
+      description:
+        "This endpoint updates a product in the authenticated user's cart. The updated product details are provided in the request body, and the user ID is extracted from the token in the request headers. It returns the updated cart.",
+    },
+    apiResponse: {
+      status: 200,
+      description: "Cart updated successfully. Returns the updated cart.",
+      example: {
+        userId: "user-id-123",
+        products: [
+          {
+            _id: "cart-item-id-1",
+            productId: "product-id-1",
+            quantity: 3,
+            size: "M",
+            color: "Red",
+          },
+          {
+            _id: "cart-item-id-2",
+            productId: "product-id-2",
+            quantity: 1,
+          },
+        ],
+      },
+    },
+  },
 };

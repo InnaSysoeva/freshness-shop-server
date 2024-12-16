@@ -61,6 +61,31 @@ export class CartsService {
     }
   }
 
+  async updateCart(
+    updatedProduct: OrderItemInterface,
+    userId: string,
+  ): Promise<CartInterface> {
+    try {
+      const updatedCart = await this.cartModel.findOneAndUpdate(
+        { userId },
+        {
+          $set: { "products.$[elem]": updatedProduct },
+        },
+        {
+          arrayFilters: [{ "elem._id": updatedProduct._id }],
+          new: true,
+        },
+      );
+
+      return updatedCart;
+    } catch (error) {
+      throw new HttpException(
+        errorMessages.notFound("User"),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
   async removeFromCart(cartItemId: string, userId: string): Promise<void> {
     try {
       await this.cartModel.findOneAndUpdate(
