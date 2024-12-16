@@ -7,4 +7,5 @@ export interface ProductFiltersInterface {
   subcategory?: string;
   sortDirection?: string;
   sort?: string;
+  search?: string;
 }

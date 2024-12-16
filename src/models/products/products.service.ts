@@ -52,18 +52,14 @@ export class ProductsService {
     filters: ProductFiltersInterface,
   ): Promise<ProductResponseInterface> {
     const skip = (page - 1) * limit;
-    const { query, sortQuery } = buildFilterQuery(filters);
+    const { query, sortQuery, search } = buildFilterQuery(filters);
     let products: ProductInterface[];
-
-    const productsQuantity = await this.productModel
-      .countDocuments(query)
-      .exec();
 
     try {
       if (query.price) {
         delete query.price;
 
-        products = await this.productModel.aggregate([
+        const productsWithCount = await this.productModel.aggregate([
           {
             $addFields: {
               discountedPrice: {
@@ -87,18 +83,56 @@ export class ProductsService {
               ],
             },
           },
-          ...(Object.keys(sortQuery).length > 0 ? [{ $sort: sortQuery }] : []),
-          { $skip: skip },
-          { $limit: Number(limit) },
+          ...(search
+            ? [
+                {
+                  $match: {
+                    $or: [{ title: { $regex: new RegExp(search, "i") } }],
+                  },
+                },
+              ]
+            : []),
+          {
+            $facet: {
+              products: [
+                ...(Object.keys(sortQuery).length > 0
+                  ? [{ $sort: sortQuery }]
+                  : []),
+                { $skip: skip },
+                { $limit: Number(limit) },
+              ],
+              productsQuantity: [{ $count: "total" }],
+            },
+          },
         ]);
+
+        return {
+          products: productsWithCount[0]?.products || [],
+          quantity:
+            productsWithCount[0]?.productsQuantity[0]?.total || 0,
+        };
       } else {
         products = await this.productModel
-          .find(query)
+          .find({
+            ...query,
+            ...(search && {
+              $or: [{ title: { $regex: new RegExp(search, "i") } }],
+            }),
+          })
           .sort(sortQuery)
           .skip(skip)
           .limit(limit)
           .exec();
       }
+
+      const productsQuantity = await this.productModel
+        .countDocuments({
+          ...query,
+          ...(search && {
+            $or: [{ title: { $regex: new RegExp(search, "i") } }],
+          }),
+        })
+        .exec();
 
       return {
         products: products,
