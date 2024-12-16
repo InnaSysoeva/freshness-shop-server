@@ -54,10 +54,7 @@ export class UsersController {
     @Param("id") productId: string,
     @Request() request: UserRequest,
   ): Promise<void> {
-    return this.usersService.removeFromWishList(
-      productId,
-      request.user._id,
-    );
+    return this.usersService.removeFromWishList(productId, request.user._id);
   }
 
   @Patch("/wish-list/remove-all")
