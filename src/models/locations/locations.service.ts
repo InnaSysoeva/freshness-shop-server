@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
 import axios, { AxiosInstance } from "axios";
-import errorMessages from "src/common/constants/error.messages";
+import errorMessages from "../../common/constants/error.messages";
 
 @Injectable()
 export class LocationsService {

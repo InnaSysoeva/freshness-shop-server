@@ -11,9 +11,10 @@ export class OrdersService {
     @InjectModel(Order.name) private orderModel: Model<OrderInterface>,
   ) {}
 
-  async createOrder(createOrderDto: CreateOrderDto): Promise<OrderInterface> {
+  async createOrder(createOrderDto: CreateOrderDto): Promise<string> {
     const order = new this.orderModel(createOrderDto);
-
-    return await order.save();
+    await order.save()
+    
+    return order._id;
   }
 }

@@ -1,7 +1,6 @@
 import {
   IsString,
   IsNumber,
-  IsBoolean,
   IsOptional,
   IsArray,
   ValidateNested,
@@ -36,10 +35,6 @@ export class CreateOrderDto {
   @IsNumber()
   @IsNotEmpty()
   totalPrice: number;
-
-  @IsBoolean()
-  @IsNotEmpty()
-  isComplete: boolean;
 
   @IsString()
   @IsOptional()
