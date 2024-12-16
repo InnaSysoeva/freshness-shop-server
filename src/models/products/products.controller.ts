@@ -6,6 +6,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { ProductInterface } from "src/common/interfaces/product.interface";
 import { ProductFiltersInterface } from "src/common/interfaces/product-filters.interface";
 import { QueryParamsPipe } from "../../pipes/query-params.pipe";
+import { ProductResponseInterface } from "src/common/interfaces/product-response.interface";
 
 @Controller("products")
 export class ProductsController {
@@ -25,7 +26,7 @@ export class ProductsController {
       limit: number;
       filters: ProductFiltersInterface;
     },
-  ): Promise<ProductInterface[]> {
+  ): Promise<ProductResponseInterface> {
     return this.productsService.getProductsByPage(page, limit, filters);
   }
 

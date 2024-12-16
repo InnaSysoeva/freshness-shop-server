@@ -8,6 +8,7 @@ import { ProductFiltersInterface } from "src/common/interfaces/product-filters.i
 import { buildFilterQuery } from "../../utils/buildFilterQuery";
 import errorMessages from "../../common/constants/error.messages";
 import { CategoryEnum } from "../../common/enums/category.enum";
+import { ProductResponseInterface } from "src/common/interfaces/product-response.interface";
 
 @Injectable()
 export class ProductsService {
@@ -49,10 +50,14 @@ export class ProductsService {
     page: number,
     limit: number,
     filters: ProductFiltersInterface,
-  ): Promise<ProductInterface[]> {
+  ): Promise<ProductResponseInterface> {
     const skip = (page - 1) * limit;
     const { query, sortQuery } = buildFilterQuery(filters);
     let products: ProductInterface[];
+
+    const productsQuantity = await this.productModel
+      .countDocuments(query)
+      .exec();
 
     try {
       if (query.price) {
@@ -95,7 +100,10 @@ export class ProductsService {
           .exec();
       }
 
-      return products;
+      return {
+        products: products,
+        quantity: productsQuantity,
+      };
     } catch (error) {
       throw new HttpException(
         errorMessages.notFound("Products"),
