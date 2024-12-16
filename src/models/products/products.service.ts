@@ -8,6 +8,7 @@ import { ProductFiltersInterface } from "src/common/interfaces/product-filters.i
 import { buildFilterQuery } from "../../utils/buildFilterQuery";
 import errorMessages from "../../common/constants/error.messages";
 import { CategoryEnum } from "../../common/enums/category.enum";
+import { ProductResponseInterface } from "src/common/interfaces/product-response.interface";
 
 @Injectable()
 export class ProductsService {
@@ -49,7 +50,7 @@ export class ProductsService {
     page: number,
     limit: number,
     filters: ProductFiltersInterface,
-  ): Promise<{ products: ProductInterface[]; productsQuantity: number }> {
+  ): Promise<ProductResponseInterface> {
     const skip = (page - 1) * limit;
     const { query, sortQuery } = buildFilterQuery(filters);
     let products: ProductInterface[];
@@ -101,7 +102,7 @@ export class ProductsService {
 
       return {
         products: products,
-        productsQuantity: productsQuantity,
+        quantity: productsQuantity,
       };
     } catch (error) {
       throw new HttpException(
