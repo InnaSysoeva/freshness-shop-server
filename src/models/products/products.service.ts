@@ -108,8 +108,7 @@ export class ProductsService {
 
         return {
           products: productsWithCount[0]?.products || [],
-          quantity:
-            productsWithCount[0]?.productsQuantity[0]?.total || 0,
+          quantity: productsWithCount[0]?.productsQuantity[0]?.total || 0,
         };
       } else {
         products = await this.productModel

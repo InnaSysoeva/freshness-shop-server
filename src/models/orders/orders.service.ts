@@ -13,8 +13,8 @@ export class OrdersService {
 
   async createOrder(createOrderDto: CreateOrderDto): Promise<string> {
     const order = new this.orderModel(createOrderDto);
-    await order.save()
-    
+    await order.save();
+
     return order._id;
   }
 }
