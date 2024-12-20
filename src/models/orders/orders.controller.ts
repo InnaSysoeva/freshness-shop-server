@@ -2,8 +2,6 @@ import {
   Controller,
   Post,
   Body,
-  Get,
-  Param,
   UseGuards,
   Request,
 } from "@nestjs/common";
@@ -27,7 +25,7 @@ export class OrdersController {
     return this.ordersService.createOrder(orderDto);
   }
 
-  @Get()
+  @Post()
   @UseGuards(JwtAuthGuard)
   @ApiOperation(orderApiDescription.getOrdersByUserId.apiOperation)
   @ApiResponse(orderApiDescription.getOrdersByUserId.apiResponse)
