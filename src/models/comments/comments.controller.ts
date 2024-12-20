@@ -56,8 +56,8 @@ export class CommentsController {
   }
 
   @Post("/reply/:id")
-  @ApiOperation(commentsApiDescription.createComment.apiOperation)
-  @ApiResponse(commentsApiDescription.createComment.apiResponse)
+  @ApiOperation(commentsApiDescription.addReplyToComment.apiOperation)
+  @ApiResponse(commentsApiDescription.addReplyToComment.apiResponse)
   async addReplyToComment(
     @Param("id") commentId: string,
     @Body() createReplyDto: CreateReplyDto,
@@ -66,6 +66,8 @@ export class CommentsController {
   }
 
   @Put("/reply/:commentId/:replyId")
+  @ApiOperation(commentsApiDescription.updateReplyToComment.apiOperation)
+  @ApiResponse(commentsApiDescription.updateReplyToComment.apiResponse)
   async updateReplyToComment(
     @Param("commentId") commentId: string,
     @Param("replyId") replyId: string,
@@ -79,6 +81,8 @@ export class CommentsController {
   }
 
   @Delete("/reply/:commentId/:replyId")
+  @ApiOperation(commentsApiDescription.deleteReplyToComment.apiOperation)
+  @ApiResponse(commentsApiDescription.deleteReplyToComment.apiResponse)
   async deleteReplyToComment(
     @Param("commentId") commentId: string,
     @Param("replyId") replyId: string,

@@ -81,4 +81,53 @@ export const commentsApiDescription = {
       ],
     },
   },
+  addReplyToComment: {
+    apiOperation: {
+      summary: "Add a reply to a comment",
+      description:
+        "This endpoint adds a reply to a specific comment. The comment ID is provided as a URL parameter, and the reply details are provided in the request body. The reply is inserted into the comment's array of replies.",
+    },
+    apiResponse: {
+      status: 201,
+      description: "Reply added successfully. Returns the new reply.",
+      example: {
+        _id: "reply-id-123",
+        parentId: "comment-id-456",
+        userId: "user-id-789",
+        content: "Thank you for the feedback!",
+        createdAt: "2024-12-18T15:00:00Z",
+        updatedAt: "2024-12-18T15:00:00Z",
+      },
+    },
+  },
+  updateReplyToComment: {
+    apiOperation: {
+      summary: "Update a reply to a comment",
+      description:
+        "This endpoint updates an existing reply to a comment. The comment ID and reply ID are provided as URL parameters, and the updated reply details are provided in the request body. It returns the updated reply.",
+    },
+    apiResponse: {
+      status: 200,
+      description: "Reply updated successfully. Returns the updated reply.",
+      example: {
+        _id: "reply-id-123",
+        parentId: "comment-id-456",
+        userId: "user-id-789",
+        content: "Updated reply content here.",
+        createdAt: "2024-12-18T15:00:00Z",
+        updatedAt: "2024-12-18T16:00:00Z",
+      },
+    },
+  },
+  deleteReplyToComment: {
+    apiOperation: {
+      summary: "Delete a reply to a comment",
+      description:
+        "This endpoint deletes a specific reply from a comment. The comment ID and reply ID are provided as URL parameters. No content is returned upon successful operation.",
+    },
+    apiResponse: {
+      status: 204,
+      description: "Reply deleted successfully. No content is returned.",
+    },
+  },
 };
