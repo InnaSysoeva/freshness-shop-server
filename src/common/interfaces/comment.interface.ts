@@ -1,9 +1,9 @@
 export interface CommentInterface {
   _id: string;
   userId: string;
-  productId: string;
+  productId?: string;
   content: string;
-  parentId: string | null;
+  replies?: CommentInterface[];
   createdAt: Date;
   updatedAt: Date;
 }

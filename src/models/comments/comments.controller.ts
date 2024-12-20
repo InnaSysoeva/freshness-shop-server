@@ -23,7 +23,7 @@ export class CommentsController {
   @ApiResponse(commentsApiDescription.createComment.apiResponse)
   async createComment(
     @Body() createCommentDto: CreateCommentDto,
-  ): Promise<string> {
+  ): Promise<CommentInterface> {
     return this.commentsService.createComment(createCommentDto);
   }
 

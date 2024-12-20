@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateCommentDto {
   @IsNotEmpty()
@@ -7,11 +7,10 @@ export class CreateCommentDto {
 
   @IsNotEmpty()
   @IsString()
+  @IsOptional()
   productId: string;
 
   @IsNotEmpty()
   @IsString()
   content: string;
-
-  parentId: string | null;
 }

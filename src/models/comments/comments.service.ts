@@ -13,12 +13,14 @@ export class CommentsService {
     @InjectModel(Comment.name) private commentModel: Model<CommentInterface>,
   ) {}
 
-  async createComment(createCommentDto: CreateCommentDto): Promise<string> {
+  async createComment(
+    createCommentDto: CreateCommentDto,
+  ): Promise<CommentInterface> {
     try {
       const comment = new this.commentModel(createCommentDto);
       await comment.save();
 
-      return comment._id;
+      return comment;
     } catch (error) {
       throw new HttpException(
         errorMessages.create("Comment"),
@@ -56,8 +58,6 @@ export class CommentsService {
 
   async deleteComment(commentId: string): Promise<void> {
     try {
-      await this.commentModel.deleteMany({ parentId: commentId });
-
       await this.commentModel.findByIdAndDelete(commentId);
     } catch (error) {
       throw new HttpException(
@@ -69,7 +69,7 @@ export class CommentsService {
 
   async getCommentsByProductId(productId: string): Promise<CommentInterface[]> {
     try {
-      return this.commentModel.find({ productId, parentId: null });
+      return this.commentModel.find({ productId });
     } catch (error) {
       throw new HttpException(
         errorMessages.notFound("Comments"),
