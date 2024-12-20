@@ -6,6 +6,8 @@ import { CommentInterface } from "src/common/interfaces/comment.interface";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
 import errorMessages from "../../common/constants/error.messages";
+import { ReplyInterface } from "src/common/interfaces/reply.interface";
+import { CreateReplyDto } from "./dto/create-reply.dto";
 
 @Injectable()
 export class CommentsService {
@@ -73,6 +75,74 @@ export class CommentsService {
     } catch (error) {
       throw new HttpException(
         errorMessages.notFound("Comments"),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async addReplyToComment(
+    commentId: string,
+    createReplyDto: CreateReplyDto,
+  ): Promise<ReplyInterface> {
+    try {
+      const updatedComment = await this.commentModel.findByIdAndUpdate(
+        commentId,
+        {
+          $push: { replies: createReplyDto },
+        },
+        { new: true },
+      );
+
+      return updatedComment.replies[updatedComment.replies.length - 1];
+    } catch (error) {
+      throw new HttpException(
+        errorMessages.create("Reply"),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async updateReplyToComment(
+    commentId: string,
+    replyId: string,
+    updateCommentDto: UpdateCommentDto,
+  ): Promise<ReplyInterface> {
+    try {
+      const updatedComment = await this.commentModel.findOneAndUpdate(
+        {
+          _id: commentId,
+          "replies._id": replyId,
+        },
+        {
+          $set: {
+            "replies.$.content": updateCommentDto.content,
+          },
+        },
+        { new: true },
+      );
+
+      return updatedComment.replies.find(
+        (reply) => reply._id.toString() === replyId,
+      );
+    } catch (error) {
+      throw new HttpException(
+        errorMessages.update("Reply"),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async deleteReplyToComment(
+    commentId: string,
+    replyId: string,
+  ): Promise<void> {
+    try {
+      await this.commentModel.findByIdAndUpdate(commentId, {
+        $pull: { replies: { _id: replyId } },
+      });
+    } catch (error) {
+      throw new HttpException(
+        errorMessages.delete("Reply"),
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
