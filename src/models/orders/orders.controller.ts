@@ -25,7 +25,7 @@ export class OrdersController {
     return this.ordersService.createOrder(orderDto);
   }
 
-  @Post()
+  @Post("/byUserId")
   @UseGuards(JwtAuthGuard)
   @ApiOperation(orderApiDescription.getOrdersByUserId.apiOperation)
   @ApiResponse(orderApiDescription.getOrdersByUserId.apiResponse)

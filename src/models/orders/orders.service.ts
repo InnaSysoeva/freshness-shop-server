@@ -5,7 +5,7 @@ import { Order } from "./order.schema";
 import { OrderInterface } from "src/common/interfaces/order.interface";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { DateRangeInterface } from "src/common/interfaces/date-range.interface";
-import errorMessages from "src/common/constants/error.messages";
+import errorMessages from "../../common/constants/error.messages";
 
 @Injectable()
 export class OrdersService {
