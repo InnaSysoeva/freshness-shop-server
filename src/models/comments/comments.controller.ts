@@ -13,6 +13,8 @@ import { CreateCommentDto } from "./dto/create-comment.dto";
 import { commentsApiDescription } from "./comments-api.description";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
 import { CommentInterface } from "src/common/interfaces/comment.interface";
+import { ReplyInterface } from "src/common/interfaces/reply.interface";
+import { CreateReplyDto } from "./dto/create-reply.dto";
 
 @Controller("comments")
 export class CommentsController {
@@ -51,5 +53,40 @@ export class CommentsController {
     @Param("id") productId: string,
   ): Promise<CommentInterface[]> {
     return this.commentsService.getCommentsByProductId(productId);
+  }
+
+  @Post("/reply/:id")
+  @ApiOperation(commentsApiDescription.addReplyToComment.apiOperation)
+  @ApiResponse(commentsApiDescription.addReplyToComment.apiResponse)
+  async addReplyToComment(
+    @Param("id") commentId: string,
+    @Body() createReplyDto: CreateReplyDto,
+  ): Promise<ReplyInterface> {
+    return this.commentsService.addReplyToComment(commentId, createReplyDto);
+  }
+
+  @Put("/reply/:commentId/:replyId")
+  @ApiOperation(commentsApiDescription.updateReplyToComment.apiOperation)
+  @ApiResponse(commentsApiDescription.updateReplyToComment.apiResponse)
+  async updateReplyToComment(
+    @Param("commentId") commentId: string,
+    @Param("replyId") replyId: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ): Promise<ReplyInterface> {
+    return this.commentsService.updateReplyToComment(
+      commentId,
+      replyId,
+      updateCommentDto,
+    );
+  }
+
+  @Delete("/reply/:commentId/:replyId")
+  @ApiOperation(commentsApiDescription.deleteReplyToComment.apiOperation)
+  @ApiResponse(commentsApiDescription.deleteReplyToComment.apiResponse)
+  async deleteReplyToComment(
+    @Param("commentId") commentId: string,
+    @Param("replyId") replyId: string,
+  ): Promise<void> {
+    return this.commentsService.deleteReplyToComment(commentId, replyId);
   }
 }
