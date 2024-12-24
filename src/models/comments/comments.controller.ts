@@ -89,4 +89,17 @@ export class CommentsController {
   ): Promise<void> {
     return this.commentsService.deleteReplyToComment(commentId, replyId);
   }
+
+  @Get("/quantity/:productId")
+  @ApiOperation(
+    commentsApiDescription.getCommentsQuantityByProductId.apiOperation,
+  )
+  @ApiResponse(
+    commentsApiDescription.getCommentsQuantityByProductId.apiResponse,
+  )
+  async getCommentsQuantityByProductId(
+    @Param("productId") productId: string,
+  ): Promise<number> {
+    return this.commentsService.getCommentsQuantityByProductId(productId);
+  }
 }

@@ -147,4 +147,20 @@ export class CommentsService {
       );
     }
   }
+
+  async getCommentsQuantityByProductId(productId: string): Promise<number> {
+    try {
+      const comments = await this.commentModel.find({ productId }).exec();
+
+      return comments.reduce((count, comment) => {
+        return count + 1 + (comment.replies ? comment.replies.length : 0);
+      }, 0);
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        errorMessages.notFound("Comments"),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }
