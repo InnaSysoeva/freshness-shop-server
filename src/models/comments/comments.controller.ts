@@ -6,6 +6,8 @@ import {
   Param,
   Delete,
   Get,
+  UseGuards,
+  Request,
 } from "@nestjs/common";
 import { CommentsService } from "./comments.service";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
@@ -15,21 +17,29 @@ import { UpdateCommentDto } from "./dto/update-comment.dto";
 import { CommentInterface } from "src/common/interfaces/comment.interface";
 import { ReplyInterface } from "src/common/interfaces/reply.interface";
 import { CreateReplyDto } from "./dto/create-reply.dto";
+import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
+import { UserRequest } from "src/common/interfaces/user-request.interface";
 
 @Controller("comments")
 export class CommentsController {
   constructor(private commentsService: CommentsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation(commentsApiDescription.createComment.apiOperation)
   @ApiResponse(commentsApiDescription.createComment.apiResponse)
   async createComment(
     @Body() createCommentDto: CreateCommentDto,
+    @Request() request: UserRequest,
   ): Promise<CommentInterface> {
-    return this.commentsService.createComment(createCommentDto);
+    return this.commentsService.createComment(
+      createCommentDto,
+      request.user._id,
+    );
   }
 
   @Put("/:id")
+  @UseGuards(JwtAuthGuard)
   @ApiOperation(commentsApiDescription.updateComment.apiOperation)
   @ApiResponse(commentsApiDescription.updateComment.apiResponse)
   async updateComment(
@@ -40,32 +50,42 @@ export class CommentsController {
   }
 
   @Delete("/:id")
+  @UseGuards(JwtAuthGuard)
   @ApiOperation(commentsApiDescription.deleteComment.apiOperation)
   @ApiResponse(commentsApiDescription.deleteComment.apiResponse)
   async deleteComment(@Param("id") commentId: string): Promise<void> {
     return this.commentsService.deleteComment(commentId);
   }
 
-  @Get("/by-product-id/:id")
+  @Get("/by-product-id/:id/:page/:limit")
   @ApiOperation(commentsApiDescription.getCommentsByProductId.apiOperation)
   @ApiResponse(commentsApiDescription.getCommentsByProductId.apiResponse)
   async getCommentsByProductId(
     @Param("id") productId: string,
+    @Param("page") page: number,
+    @Param("limit") limit: number,
   ): Promise<CommentInterface[]> {
-    return this.commentsService.getCommentsByProductId(productId);
+    return this.commentsService.getCommentsByProductId(productId, page, limit);
   }
 
   @Post("/reply/:id")
+  @UseGuards(JwtAuthGuard)
   @ApiOperation(commentsApiDescription.addReplyToComment.apiOperation)
   @ApiResponse(commentsApiDescription.addReplyToComment.apiResponse)
   async addReplyToComment(
     @Param("id") commentId: string,
     @Body() createReplyDto: CreateReplyDto,
+    @Request() request: UserRequest,
   ): Promise<ReplyInterface> {
-    return this.commentsService.addReplyToComment(commentId, createReplyDto);
+    return this.commentsService.addReplyToComment(
+      commentId,
+      createReplyDto,
+      request.user._id,
+    );
   }
 
   @Put("/reply/:commentId/:replyId")
+  @UseGuards(JwtAuthGuard)
   @ApiOperation(commentsApiDescription.updateReplyToComment.apiOperation)
   @ApiResponse(commentsApiDescription.updateReplyToComment.apiResponse)
   async updateReplyToComment(
@@ -81,6 +101,7 @@ export class CommentsController {
   }
 
   @Delete("/reply/:commentId/:replyId")
+  @UseGuards(JwtAuthGuard)
   @ApiOperation(commentsApiDescription.deleteReplyToComment.apiOperation)
   @ApiResponse(commentsApiDescription.deleteReplyToComment.apiResponse)
   async deleteReplyToComment(
