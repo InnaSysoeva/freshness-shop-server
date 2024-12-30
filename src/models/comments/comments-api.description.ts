@@ -130,4 +130,17 @@ export const commentsApiDescription = {
       description: "Reply deleted successfully. No content is returned.",
     },
   },
+  getCommentsQuantityByProductId: {
+    apiOperation: {
+      summary: "Get the total quantity of comments and replies for a product",
+      description:
+        "This endpoint retrieves the total number of comments and their replies for a specific product. It counts all comments associated with the product and includes the replies stored within the comments arrays.",
+    },
+    apiResponse: {
+      status: 200,
+      description:
+        "Successfully retrieved the total number of comments and replies for the product.",
+      quantity: 15,
+    },
+  },
 };

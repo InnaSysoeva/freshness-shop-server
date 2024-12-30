@@ -17,9 +17,11 @@ export class CommentsService {
 
   async createComment(
     createCommentDto: CreateCommentDto,
+    userId: string,
   ): Promise<CommentInterface> {
     try {
-      const comment = new this.commentModel(createCommentDto);
+      const comment = new this.commentModel({ ...createCommentDto, userId });
+
       await comment.save();
 
       return comment;
@@ -69,9 +71,16 @@ export class CommentsService {
     }
   }
 
-  async getCommentsByProductId(productId: string): Promise<CommentInterface[]> {
+  async getCommentsByProductId(
+    productId: string,
+    page: number,
+    limit: number,
+  ): Promise<CommentInterface[]> {
     try {
-      return this.commentModel.find({ productId });
+      return await this.commentModel
+        .find({ productId })
+        .skip((page - 1) * limit)
+        .limit(limit);
     } catch (error) {
       throw new HttpException(
         errorMessages.notFound("Comments"),
@@ -83,12 +92,13 @@ export class CommentsService {
   async addReplyToComment(
     commentId: string,
     createReplyDto: CreateReplyDto,
+    userId: string,
   ): Promise<ReplyInterface> {
     try {
       const updatedComment = await this.commentModel.findByIdAndUpdate(
         commentId,
         {
-          $push: { replies: createReplyDto },
+          $push: { replies: { ...createReplyDto, userId } },
         },
         { new: true },
       );
@@ -143,6 +153,21 @@ export class CommentsService {
     } catch (error) {
       throw new HttpException(
         errorMessages.delete("Reply"),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async getCommentsQuantityByProductId(productId: string): Promise<number> {
+    try {
+      const comments = await this.commentModel.find({ productId }).exec();
+
+      return comments.reduce((count, comment) => {
+        return count + 1 + (comment.replies?.length || 0);
+      }, 0);
+    } catch (error) {
+      throw new HttpException(
+        errorMessages.notFound("Comments"),
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
