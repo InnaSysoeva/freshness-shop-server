@@ -163,10 +163,9 @@ export class CommentsService {
       const comments = await this.commentModel.find({ productId }).exec();
 
       return comments.reduce((count, comment) => {
-        return count + 1 + (comment.replies ? comment.replies.length : 0);
+        return count + 1 + (comment.replies?.length || 0);
       }, 0);
     } catch (error) {
-      console.log(error);
       throw new HttpException(
         errorMessages.notFound("Comments"),
         HttpStatus.INTERNAL_SERVER_ERROR,
