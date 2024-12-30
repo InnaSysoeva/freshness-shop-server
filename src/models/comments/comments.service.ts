@@ -5,9 +5,9 @@ import { Comment } from "./comment.schema";
 import { CommentInterface } from "src/common/interfaces/comment.interface";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
-import errorMessages from "../../common/constants/error.messages";
 import { ReplyInterface } from "src/common/interfaces/reply.interface";
 import { CreateReplyDto } from "./dto/create-reply.dto";
+import errorMessages from "../../common/constants/error.messages";
 
 @Injectable()
 export class CommentsService {
