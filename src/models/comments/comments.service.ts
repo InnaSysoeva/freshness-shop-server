@@ -24,7 +24,9 @@ export class CommentsService {
 
       await comment.save();
 
-      return comment;
+      return await this.commentModel
+        .findById(comment._id)
+        .populate("userId", "firstName lastName");
     } catch (error) {
       throw new HttpException(
         errorMessages.create("Comment"),
@@ -80,8 +82,11 @@ export class CommentsService {
       return await this.commentModel
         .find({ productId })
         .skip((page - 1) * limit)
-        .limit(limit);
+        .limit(limit)
+        .populate("userId", "firstName lastName")
+        .populate("replies.userId", "firstName lastName");
     } catch (error) {
+      console.log(error);
       throw new HttpException(
         errorMessages.notFound("Comments"),
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -103,7 +108,11 @@ export class CommentsService {
         { new: true },
       );
 
-      return updatedComment.replies[updatedComment.replies.length - 1];
+      const populatedComment = await this.commentModel
+        .findById(updatedComment._id)
+        .populate("replies.userId", "firstName lastName");
+
+      return populatedComment.replies[populatedComment.replies.length - 1];
     } catch (error) {
       throw new HttpException(
         errorMessages.create("Reply"),
@@ -158,13 +167,21 @@ export class CommentsService {
     }
   }
 
-  async getCommentsQuantityByProductId(productId: string): Promise<number> {
+  async getCommentsQuantityByProductId(
+    productId: string,
+  ): Promise<{ totalWithReplies: number; total: number }> {
     try {
       const comments = await this.commentModel.find({ productId }).exec();
 
-      return comments.reduce((count, comment) => {
-        return count + 1 + (comment.replies?.length || 0);
-      }, 0);
+      return comments.reduce(
+        (count, comment) => {
+          count.total += 1;
+          count.totalWithReplies += 1 + (comment.replies?.length || 0);
+
+          return count;
+        },
+        { total: 0, totalWithReplies: 0 },
+      );
     } catch (error) {
       throw new HttpException(
         errorMessages.notFound("Comments"),

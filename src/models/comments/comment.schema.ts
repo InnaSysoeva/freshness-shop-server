@@ -3,7 +3,7 @@ import { Document, Types } from "mongoose";
 
 @Schema({ timestamps: true })
 export class Reply {
-  @Prop({ required: true })
+  @Prop({ required: true, type: Types.ObjectId, ref: "User" })
   userId: string;
 
   @Prop({ required: true })
@@ -23,7 +23,7 @@ export const ReplySchema = SchemaFactory.createForClass(Reply);
 
 @Schema({ timestamps: true })
 export class Comment extends Document {
-  @Prop({ required: true })
+  @Prop({ required: true, type: Types.ObjectId, ref: "User" })
   userId: string;
 
   @Prop()
