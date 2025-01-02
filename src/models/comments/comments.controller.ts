@@ -120,7 +120,7 @@ export class CommentsController {
   )
   async getCommentsQuantityByProductId(
     @Param("productId") productId: string,
-  ): Promise<number> {
+  ): Promise<{ totalWithReplies: number; total: number }> {
     return this.commentsService.getCommentsQuantityByProductId(productId);
   }
 }
